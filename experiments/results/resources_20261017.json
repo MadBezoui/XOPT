@@ -1,0 +1,83 @@
+{
+  "timestamp": "2026-10-17T11:30:33.407615",
+  "os": {
+    "system": "Darwin",
+    "release": "27.2.0",
+    "version": "Darwin Kernel Version 27.2.0: Sun Sep 13 20:01:35 PDT 2026; root:xnu-13432.40.162~92/RELEASE_ARM64_T6000",
+    "machine": "arm64",
+    "python_version": "3.11.7"
+  },
+  "cpu": {
+    "physical_cores": 10,
+    "logical_cores": 10,
+    "max_frequency_mhz": null,
+    "architecture": "arm64",
+    "processor": "arm"
+  },
+  "memory": {
+    "total_gb": 16.0,
+    "available_gb": 2.83,
+    "used_gb": 6.09,
+    "percent_used": 82.3,
+    "swap_total_gb": 12.0,
+    "swap_available_gb": 1.46
+  },
+  "disk": {
+    "path": "/Users/madanibezoui/Documents/Projects/XOPT",
+    "total_gb": 460.43,
+    "available_gb": 5.25,
+    "used_gb": 455.19,
+    "percent_used": 98.9
+  },
+  "gpu": {
+    "nvidia_gpus": [],
+    "amd_gpus": [],
+    "apple_silicon": {
+      "name": "Apple M1 Pro",
+      "type": "Apple Silicon",
+      "backend": "Metal",
+      "unified_memory": true,
+      "chipset": "Apple M1 Pro",
+      "gpu_cores": "16"
+    },
+    "total_gpus": 1,
+    "available_backends": [
+      "Metal"
+    ]
+  },
+  "recommendations": {
+    "parallel_processing": {
+      "strategy": "high_parallelism",
+      "suggested_workers": 8,
+      "libraries": [
+        "joblib",
+        "multiprocessing",
+        "dask"
+      ]
+    },
+    "memory_strategy": {
+      "strategy": "memory_constrained",
+      "libraries": [
+        "zarr",
+        "dask",
+        "h5py"
+      ],
+      "note": "Use out-of-core processing for large datasets"
+    },
+    "gpu_acceleration": {
+      "available": true,
+      "backends": [
+        "Metal"
+      ],
+      "suggested_libraries": [
+        "pytorch-mps",
+        "tensorflow-metal",
+        "jax-metal"
+      ]
+    },
+    "large_data_handling": {
+      "strategy": "disk_constrained",
+      "note": "Limited disk space, use streaming or compression"
+    }
+  }
+}

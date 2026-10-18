@@ -1,0 +1,103 @@
+{
+  "runs": 320,
+  "status_counts": {
+    "SOLVER_VALIDATED": 258,
+    "SOLVER_INFEASIBLE": 47,
+    "TIME_LIMIT": 15
+  },
+  "valid_explanations": 258,
+  "correctness_pairs": 20,
+  "correctness_max_objective_difference": 4.440892098500626e-16,
+  "main_paired_count": 50,
+  "main_multicut_over_ccg_median": 1.4778848512453955,
+  "main_multicut_over_ccg_q1": 1.0270529199252425,
+  "main_multicut_over_ccg_q3": 1.7660084181136877,
+  "correctness": {
+    "n": 40,
+    "counts": {
+      "SOLVER_INFEASIBLE": 24,
+      "SOLVER_VALIDATED": 16
+    },
+    "total_seconds": 4.648688793182373
+  },
+  "main": {
+    "n": 120,
+    "counts": {
+      "SOLVER_VALIDATED": 100,
+      "SOLVER_INFEASIBLE": 20
+    },
+    "total_seconds": 44.61991024017334
+  },
+  "sensitivity": {
+    "n": 72,
+    "counts": {
+      "SOLVER_VALIDATED": 69,
+      "SOLVER_INFEASIBLE": 3
+    },
+    "total_seconds": 11.63844609260559
+  },
+  "scale": {
+    "n": 36,
+    "counts": {
+      "SOLVER_VALIDATED": 32,
+      "TIME_LIMIT": 4
+    },
+    "total_seconds": 257.9709873199463
+  },
+  "capacity": {
+    "n": 16,
+    "counts": {
+      "SOLVER_VALIDATED": 16
+    },
+    "total_seconds": 16.67078685760498
+  },
+  "long": {
+    "n": 12,
+    "counts": {
+      "TIME_LIMIT": 11,
+      "SOLVER_VALIDATED": 1
+    },
+    "total_seconds": 239.82524847984314
+  },
+  "multifoil": {
+    "n": 24,
+    "counts": {
+      "SOLVER_VALIDATED": 24
+    },
+    "total_seconds": 21.349483013153076
+  },
+  "case": {
+    "id": "retail_I2_T6_s1",
+    "foil": [
+      [
+        1,
+        2,
+        1
+      ]
+    ],
+    "objective": 0.1767407235654289,
+    "periods": 1,
+    "max_relative_edit": 0.1667407235654288
+  },
+  "robustness": {
+    "strong": {
+      "count": 25,
+      "median": 0.003875732421875,
+      "min": 0.0008697509765625,
+      "max": 0.00753021240234375
+    },
+    "weak": {
+      "count": 25,
+      "median": 0.0,
+      "min": 0.0,
+      "max": 0.0
+    }
+  },
+  "single_lever": {
+    "n": 108,
+    "validated": 94,
+    "paired": 79,
+    "global_improves": 24,
+    "max_absolute_improvement": 0.10507834423768625
+  }
+}

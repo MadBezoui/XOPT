@@ -1,0 +1,6 @@
+hospital_I10_T11_s1|weak|cold|120.0 => SOLVER_VALIDATED timing_ok=true
+hospital_I10_T11_s1|weak|warm|120.0 => SOLVER_VALIDATED timing_ok=true
+retail_I10_T32_s1|weak|warm|60.0 => FEASIBLE_TIME_LIMIT timing_ok=true
+retail_I10_T32_s1|weak|cold|60.0 => TIME_LIMIT timing_ok=true
+retail_I10_T32_s1|weak|cold|120.0 => TIME_LIMIT timing_ok=true
+retail_I10_T32_s1|weak|warm|120.0 => FEASIBLE_TIME_LIMIT timing_ok=true

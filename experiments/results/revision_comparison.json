@@ -1,0 +1,14 @@
+{
+  "paired_primary_records": 320,
+  "status_changes_after_mapping": [
+    {
+      "profile": "long",
+      "key": "retail_I5_T24_s1|weak|ccg|24|0.0|0.02",
+      "old": "TIME_LIMIT",
+      "new": "SOLVER_VALIDATED"
+    }
+  ],
+  "max_objective_difference_jointly_validated": 0.0,
+  "old_results_location": "archive_v1, preserved without edits",
+  "note": "Timing-limited outcomes may change across reruns; this is not a controlled experiment isolating the stopping-rule correction."
+}

@@ -1,0 +1,12 @@
+long 1/12 retail_I10_T32_s2|strong|ccg|32|0.0|0.02 => TIME_LIMIT
+long 2/12 retail_I5_T24_s1|strong|ccg|24|0.0|0.02 => TIME_LIMIT
+long 3/12 retail_I10_T32_s1|strong|ccg|32|0.0|0.02 => TIME_LIMIT
+long 4/12 retail_I10_T32_s2|weak|ccg|32|0.0|0.02 => TIME_LIMIT
+long 5/12 retail_I5_T24_s3|strong|ccg|24|0.0|0.02 => TIME_LIMIT
+long 6/12 retail_I10_T32_s3|strong|ccg|32|0.0|0.02 => TIME_LIMIT
+long 7/12 retail_I5_T24_s3|weak|ccg|24|0.0|0.02 => TIME_LIMIT
+long 8/12 retail_I10_T32_s1|weak|ccg|32|0.0|0.02 => TIME_LIMIT
+long 9/12 retail_I10_T32_s3|weak|ccg|32|0.0|0.02 => TIME_LIMIT
+long 10/12 retail_I5_T24_s2|strong|ccg|24|0.0|0.02 => TIME_LIMIT
+long 11/12 retail_I5_T24_s2|weak|ccg|24|0.0|0.02 => TIME_LIMIT
+long 12/12 retail_I5_T24_s1|weak|ccg|24|0.0|0.02 => SOLVER_VALIDATED

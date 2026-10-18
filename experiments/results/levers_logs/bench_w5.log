@@ -1,0 +1,65 @@
+retail_I2_T6_s2|weak|F|dual => SOLVER_VALIDATED
+retail_I2_T6_s3|strong|PH|dual => SOLVER_INFEASIBLE
+retail_I2_T6_s1|strong|PH|dual => SOLVER_INFEASIBLE
+retail_I2_T6_s2|strong|FPH|dual => SOLVER_VALIDATED
+retail_I1_T4_s3|strong|FPH|trajectory => SOLVER_VALIDATED
+retail_I3_T8_s2|weak|FPH|trajectory => SOLVER_VALIDATED
+retail_I2_T6_s5|weak|FPH|trajectory => SOLVER_VALIDATED
+retail_I1_T4_s1|strong|F|dual => SOLVER_INFEASIBLE
+retail_I2_T6_s5|strong|FPH|dual => SOLVER_VALIDATED
+retail_I1_T4_s4|strong|PH|dual => SOLVER_INFEASIBLE
+retail_I5_T8_s2|weak|PH|trajectory => TIME_LIMIT
+
+[84154] signal 15: Terminated: 15
+in expression starting at /Users/madanibezoui/Documents/Projects/XOPT/experiments/scripts/run_levers.jl:41
+_ZN11HighsDomain18CutpoolPropagation22updateActivityUbChangeEiddbbb at /Users/madanibezoui/.julia/artifacts/5a3d28a9c8ef24dab596551d0b991b2f9d029ee7/lib/libhighs.1.15.dylib (unknown line)
+_ZN11HighsDomain22updateActivityUbChangeEidd at /Users/madanibezoui/.julia/artifacts/5a3d28a9c8ef24dab596551d0b991b2f9d029ee7/lib/libhighs.1.15.dylib (unknown line)
+_ZN11HighsDomain13doChangeBoundERK17HighsDomainChange at /Users/madanibezoui/.julia/artifacts/5a3d28a9c8ef24dab596551d0b991b2f9d029ee7/lib/libhighs.1.15.dylib (unknown line)
+_ZN11HighsDomain9backtrackEv at /Users/madanibezoui/.julia/artifacts/5a3d28a9c8ef24dab596551d0b991b2f9d029ee7/lib/libhighs.1.15.dylib (unknown line)
+_ZN11HighsSearch15backtrackPlungeER14HighsNodeQueue at /Users/madanibezoui/.julia/artifacts/5a3d28a9c8ef24dab596551d0b991b2f9d029ee7/lib/libhighs.1.15.dylib (unknown line)
+_ZZZN14HighsMipSolver3runEvENK4$_22clERKNSt3__16vectorIiNS1_9allocatorIiEEEERNS2_IZNS_3runEvE11RestartVoteNS3_IS8_EEEEbiidENKUliE_clEi at /Users/madanibezoui/.julia/artifacts/5a3d28a9c8ef24dab596551d0b991b2f9d029ee7/lib/libhighs.1.15.dylib (unknown line)
+_ZN14HighsMipSolver3runEv at /Users/madanibezoui/.julia/artifacts/5a3d28a9c8ef24dab596551d0b991b2f9d029ee7/lib/libhighs.1.15.dylib (unknown line)
+_ZN5Highs12callSolveMipEv at /Users/madanibezoui/.julia/artifacts/5a3d28a9c8ef24dab596551d0b991b2f9d029ee7/lib/libhighs.1.15.dylib (unknown line)
+_ZN5Highs19calledOptimizeModelEv at /Users/madanibezoui/.julia/artifacts/5a3d28a9c8ef24dab596551d0b991b2f9d029ee7/lib/libhighs.1.15.dylib (unknown line)
+_ZN5Highs13optimizeModelEv at /Users/madanibezoui/.julia/artifacts/5a3d28a9c8ef24dab596551d0b991b2f9d029ee7/lib/libhighs.1.15.dylib (unknown line)
+_ZN5Highs3runEv at /Users/madanibezoui/.julia/artifacts/5a3d28a9c8ef24dab596551d0b991b2f9d029ee7/lib/libhighs.1.15.dylib (unknown line)
+Highs_run at /Users/madanibezoui/.julia/packages/HiGHS/4ZEBB/src/gen/libhighs.jl:344 [inlined]
+_gc_safe_Highs_run at /Users/madanibezoui/.julia/packages/HiGHS/4ZEBB/src/MOI_wrapper.jl:2251
+_Highs_run_workaround_issue_316 at /Users/madanibezoui/.julia/packages/HiGHS/4ZEBB/src/MOI_wrapper.jl:2275 [inlined]
+#42 at /Users/madanibezoui/.julia/packages/HiGHS/4ZEBB/src/MOI_wrapper.jl:2318 [inlined]
+disable_sigint at ./c.jl:167
+optimize! at /Users/madanibezoui/.julia/packages/HiGHS/4ZEBB/src/MOI_wrapper.jl:2318
+optimize! at /Users/madanibezoui/.julia/packages/MathOptInterface/13jDB/src/Bridges/bridge_optimizer.jl:367 [inlined]
+optimize! at /Users/madanibezoui/.julia/packages/MathOptInterface/13jDB/src/Utilities/cachingoptimizer.jl:379
+jfptr_optimizeNOT._7925 at /Users/madanibezoui/.julia/compiled/v1.11/HiGHS/WFic5_PSiSK.dylib (unknown line)
+#optimize!#105 at /Users/madanibezoui/.julia/packages/JuMP/Y8Mtc/src/optimizer_interface.jl:633
+optimize! at /Users/madanibezoui/.julia/packages/JuMP/Y8Mtc/src/optimizer_interface.jl:569 [inlined]
+#explain_levers#106 at /Users/madanibezoui/Documents/Projects/XOPT/experiments/src/levers.jl:108
+explain_levers at /Users/madanibezoui/Documents/Projects/XOPT/experiments/src/levers.jl:96
+unknown function (ip: 0x1453cc067)
+jl_apply at /Users/julia/.julia/scratchspaces/a66863c6-20e8-4ff4-8a62-49f30b1f605e/agent-cache/default-honeycrisp-R17H3W25T9.0/build/default-honeycrisp-R17H3W25T9-0/julialang/julia-release-1-dot-11/src/./julia.h:2157 [inlined]
+eval at ./boot.jl:430 [inlined]
+retail_I5_T11_s3|weak|FPH|trajectory => TIME_LIMIT
+retail_I1_T4_s5|strong|PH|trajectory => SOLVER_VALIDATED
+retail_I5_T8_s3|weak|F|dual => TIME_LIMIT
+retail_I5_T11_s3|weak|PH|trajectory => TIME_LIMIT
+retail_I2_T6_s5|strong|PH|dual => SOLVER_VALIDATED
+retail_I5_T11_s3|strong|FPH|dual => TIME_LIMIT
+retail_I2_T6_s2|weak|PH|dual => SOLVER_VALIDATED
+retail_I1_T4_s1|weak|PH|trajectory => SOLVER_INFEASIBLE
+retail_I2_T6_s2|strong|FPH|trajectory => SOLVER_VALIDATED
+retail_I5_T8_s2|strong|PH|trajectory => TIME_LIMIT
+retail_I5_T8_s1|strong|PH|trajectory => TIME_LIMIT
+retail_I3_T8_s2|strong|FPH|trajectory => SOLVER_VALIDATED
+retail_I5_T11_s3|strong|PH|trajectory => TIME_LIMIT
+retail_I5_T11_s1|weak|PH|trajectory => TIME_LIMIT
+retail_I1_T4_s3|weak|FPH|dual => SOLVER_VALIDATED
+retail_I3_T8_s5|strong|PH|dual => TIME_LIMIT
+retail_I3_T8_s3|weak|FPH|dual => SOLVER_VALIDATED
+retail_I2_T6_s4|weak|F|dual => SOLVER_VALIDATED
+retail_I1_T4_s4|weak|F|dual => SOLVER_INFEASIBLE
+retail_I5_T8_s2|weak|PH|dual => TIME_LIMIT
+retail_I3_T8_s4|strong|F|dual => TIME_LIMIT
+retail_I3_T8_s5|strong|FPH|trajectory => TIME_LIMIT
+retail_I2_T6_s3|weak|PH|dual => SOLVER_INFEASIBLE
+retail_I1_T4_s4|strong|F|dual => SOLVER_INFEASIBLE

@@ -1,0 +1,115 @@
+retail_I3_T8_s4|weak|FPH|trajectory => TIME_LIMIT
+
+[84153] signal 15: Terminated: 15
+in expression starting at /Users/madanibezoui/Documents/Projects/XOPT/experiments/scripts/run_levers.jl:41
+_ZNSt3__16vectorIcNS_9allocatorIcEEE6assignEmRKc at /Users/madanibezoui/.julia/artifacts/5a3d28a9c8ef24dab596551d0b991b2f9d029ee7/lib/libhighs.1.15.dylib (unknown line)
+_ZN11HVectorBaseIdE5setupEi at /Users/madanibezoui/.julia/artifacts/5a3d28a9c8ef24dab596551d0b991b2f9d029ee7/lib/libhighs.1.15.dylib (unknown line)
+_ZN8HEkkDual18initialiseInstanceEv at /Users/madanibezoui/.julia/artifacts/5a3d28a9c8ef24dab596551d0b991b2f9d029ee7/lib/libhighs.1.15.dylib (unknown line)
+_ZN8HEkkDualC2ER4HEkk at /Users/madanibezoui/.julia/artifacts/5a3d28a9c8ef24dab596551d0b991b2f9d029ee7/lib/libhighs.1.15.dylib (unknown line)
+_ZN4HEkk5solveEb at /Users/madanibezoui/.julia/artifacts/5a3d28a9c8ef24dab596551d0b991b2f9d029ee7/lib/libhighs.1.15.dylib (unknown line)
+_Z14solveLpSimplexR19HighsLpSolverObject at /Users/madanibezoui/.julia/artifacts/5a3d28a9c8ef24dab596551d0b991b2f9d029ee7/lib/libhighs.1.15.dylib (unknown line)
+_ZZ7solveLpR19HighsLpSolverObjectNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEEENK3$_0clEv at /Users/madanibezoui/.julia/artifacts/5a3d28a9c8ef24dab596551d0b991b2f9d029ee7/lib/libhighs.1.15.dylib (unknown line)
+_Z7solveLpR19HighsLpSolverObjectNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE at /Users/madanibezoui/.julia/artifacts/5a3d28a9c8ef24dab596551d0b991b2f9d029ee7/lib/libhighs.1.15.dylib (unknown line)
+_ZZN5Highs19calledOptimizeModelEvENK3$_0clER7HighsLpRKNSt3__112basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEERd at /Users/madanibezoui/.julia/artifacts/5a3d28a9c8ef24dab596551d0b991b2f9d029ee7/lib/libhighs.1.15.dylib (unknown line)
+_ZN5Highs19calledOptimizeModelEv at /Users/madanibezoui/.julia/artifacts/5a3d28a9c8ef24dab596551d0b991b2f9d029ee7/lib/libhighs.1.15.dylib (unknown line)
+_ZN17HighsLpRelaxation3runEb at /Users/madanibezoui/.julia/artifacts/5a3d28a9c8ef24dab596551d0b991b2f9d029ee7/lib/libhighs.1.15.dylib (unknown line)
+_ZN17HighsLpRelaxation9resolveLpEP11HighsDomain at /Users/madanibezoui/.julia/artifacts/5a3d28a9c8ef24dab596551d0b991b2f9d029ee7/lib/libhighs.1.15.dylib (unknown line)
+_ZN11HighsSearch12evaluateNodeEv at /Users/madanibezoui/.julia/artifacts/5a3d28a9c8ef24dab596551d0b991b2f9d029ee7/lib/libhighs.1.15.dylib (unknown line)
+_ZN11HighsSearch4diveEx at /Users/madanibezoui/.julia/artifacts/5a3d28a9c8ef24dab596551d0b991b2f9d029ee7/lib/libhighs.1.15.dylib (unknown line)
+_ZZZN14HighsMipSolver3runEvENK4$_22clERKNSt3__16vectorIiNS1_9allocatorIiEEEERNS2_IZNS_3runEvE11RestartVoteNS3_IS8_EEEEbiidENKUliE_clEi at /Users/madanibezoui/.julia/artifacts/5a3d28a9c8ef24dab596551d0b991b2f9d029ee7/lib/libhighs.1.15.dylib (unknown line)
+_ZN14HighsMipSolver3runEv at /Users/madanibezoui/.julia/artifacts/5a3d28a9c8ef24dab596551d0b991b2f9d029ee7/lib/libhighs.1.15.dylib (unknown line)
+_ZN5Highs12callSolveMipEv at /Users/madanibezoui/.julia/artifacts/5a3d28a9c8ef24dab596551d0b991b2f9d029ee7/lib/libhighs.1.15.dylib (unknown line)
+_ZN5Highs19calledOptimizeModelEv at /Users/madanibezoui/.julia/artifacts/5a3d28a9c8ef24dab596551d0b991b2f9d029ee7/lib/libhighs.1.15.dylib (unknown line)
+_ZN5Highs13optimizeModelEv at /Users/madanibezoui/.julia/artifacts/5a3d28a9c8ef24dab596551d0b991b2f9d029ee7/lib/libhighs.1.15.dylib (unknown line)
+_ZN5Highs3runEv at /Users/madanibezoui/.julia/artifacts/5a3d28a9c8ef24dab596551d0b991b2f9d029ee7/lib/libhighs.1.15.dylib (unknown line)
+Highs_run at /Users/madanibezoui/.julia/packages/HiGHS/4ZEBB/src/gen/libhighs.jl:344 [inlined]
+_gc_safe_Highs_run at /Users/madanibezoui/.julia/packages/HiGHS/4ZEBB/src/MOI_wrapper.jl:2251
+_Highs_run_workaround_issue_316 at /Users/madanibezoui/.julia/packages/HiGHS/4ZEBB/src/MOI_wrapper.jl:2275 [inlined]
+#42 at /Users/madanibezoui/.julia/packages/HiGHS/4ZEBB/src/MOI_wrapper.jl:2318 [inlined]
+disable_sigint at ./c.jl:167
+optimize! at /Users/madanibezoui/.julia/packages/HiGHS/4ZEBB/src/MOI_wrapper.jl:2318
+unknown function (ip: 0x144d3c067)
+retail_I3_T8_s5|weak|F|dual => TIME_LIMIT
+retail_I1_T4_s3|weak|PH|trajectory => SOLVER_INFEASIBLE
+retail_I3_T8_s2|weak|PH|trajectory => SOLVER_VALIDATED
+retail_I3_T8_s2|strong|FPH|dual => SOLVER_VALIDATED
+retail_I5_T8_s2|strong|F|dual => TIME_LIMIT
+retail_I5_T11_s1|strong|FPH|dual => TIME_LIMIT
+retail_I1_T4_s5|strong|FPH|dual => SOLVER_VALIDATED
+retail_I3_T8_s1|weak|PH|dual => TIME_LIMIT
+retail_I1_T4_s1|weak|PH|dual => SOLVER_INFEASIBLE
+retail_I2_T6_s4|weak|PH|dual => SOLVER_INFEASIBLE
+retail_I3_T8_s3|weak|PH|trajectory => SOLVER_VALIDATED
+retail_I3_T8_s2|weak|PH|dual => SOLVER_VALIDATED
+retail_I5_T11_s3|strong|FPH|trajectory => TIME_LIMIT
+retail_I1_T4_s3|weak|FPH|trajectory => SOLVER_VALIDATED
+retail_I1_T4_s3|weak|PH|dual => SOLVER_INFEASIBLE
+retail_I1_T4_s4|weak|FPH|dual => SOLVER_INFEASIBLE
+retail_I5_T8_s1|strong|PH|dual => TIME_LIMIT
+retail_I2_T6_s5|weak|PH|trajectory => SOLVER_VALIDATED
+retail_I3_T8_s4|weak|PH|trajectory => TIME_LIMIT
+retail_I1_T4_s2|strong|FPH|dual => SOLVER_VALIDATED
+retail_I1_T4_s1|weak|FPH|dual => SOLVER_INFEASIBLE
+retail_I2_T6_s3|strong|PH|trajectory => SOLVER_INFEASIBLE
+retail_I3_T8_s5|weak|PH|trajectory => TIME_LIMIT
+retail_I3_T8_s5|strong|FPH|dual => TIME_LIMIT
+retail_I5_T8_s1|weak|PH|trajectory => TIME_LIMIT
+retail_I2_T6_s4|strong|PH|trajectory => SOLVER_INFEASIBLE
+retail_I1_T4_s4|strong|FPH|trajectory => SOLVER_INFEASIBLE
+
+[87919] signal 15: Terminated: 15
+in expression starting at /Users/madanibezoui/Documents/Projects/XOPT/experiments/scripts/run_levers.jl:41
+_ZN18HighsCutGeneration27separateLiftedKnapsackCoverEv at /Users/madanibezoui/.julia/artifacts/5a3d28a9c8ef24dab596551d0b991b2f9d029ee7/lib/libhighs.1.15.dylib (unknown line)
+_ZN18HighsCutGeneration14tryGenerateCutERNSt3__16vectorIiNS0_9allocatorIiEEEERNS1_IdNS2_IdEEEEbbbdbbb at /Users/madanibezoui/.julia/artifacts/5a3d28a9c8ef24dab596551d0b991b2f9d029ee7/lib/libhighs.1.15.dylib (unknown line)
+_ZN18HighsCutGeneration16generateConflictERK11HighsDomainS2_RNSt3__16vectorIiNS3_9allocatorIiEEEERNS4_IdNS5_IdEEEERd at /Users/madanibezoui/.julia/artifacts/5a3d28a9c8ef24dab596551d0b991b2f9d029ee7/lib/libhighs.1.15.dylib (unknown line)
+_ZN11HighsSearch21addInfeasibleConflictEv at /Users/madanibezoui/.julia/artifacts/5a3d28a9c8ef24dab596551d0b991b2f9d029ee7/lib/libhighs.1.15.dylib (unknown line)
+_ZN11HighsSearch12evaluateNodeEv at /Users/madanibezoui/.julia/artifacts/5a3d28a9c8ef24dab596551d0b991b2f9d029ee7/lib/libhighs.1.15.dylib (unknown line)
+_ZN11HighsSearch4diveEx at /Users/madanibezoui/.julia/artifacts/5a3d28a9c8ef24dab596551d0b991b2f9d029ee7/lib/libhighs.1.15.dylib (unknown line)
+_ZZZN14HighsMipSolver3runEvENK4$_22clERKNSt3__16vectorIiNS1_9allocatorIiEEEERNS2_IZNS_3runEvE11RestartVoteNS3_IS8_EEEEbiidENKUliE_clEi at /Users/madanibezoui/.julia/artifacts/5a3d28a9c8ef24dab596551d0b991b2f9d029ee7/lib/libhighs.1.15.dylib (unknown line)
+_ZN14HighsMipSolver3runEv at /Users/madanibezoui/.julia/artifacts/5a3d28a9c8ef24dab596551d0b991b2f9d029ee7/lib/libhighs.1.15.dylib (unknown line)
+_ZN5Highs12callSolveMipEv at /Users/madanibezoui/.julia/artifacts/5a3d28a9c8ef24dab596551d0b991b2f9d029ee7/lib/libhighs.1.15.dylib (unknown line)
+_ZN5Highs19calledOptimizeModelEv at /Users/madanibezoui/.julia/artifacts/5a3d28a9c8ef24dab596551d0b991b2f9d029ee7/lib/libhighs.1.15.dylib (unknown line)
+_ZN5Highs13optimizeModelEv at /Users/madanibezoui/.julia/artifacts/5a3d28a9c8ef24dab596551d0b991b2f9d029ee7/lib/libhighs.1.15.dylib (unknown line)
+_ZN5Highs3runEv at /Users/madanibezoui/.julia/artifacts/5a3d28a9c8ef24dab596551d0b991b2f9d029ee7/lib/libhighs.1.15.dylib (unknown line)
+Highs_run at /Users/madanibezoui/.julia/packages/HiGHS/4ZEBB/src/gen/libhighs.jl:344 [inlined]
+_gc_safe_Highs_run at /Users/madanibezoui/.julia/packages/HiGHS/4ZEBB/src/MOI_wrapper.jl:2251
+_Highs_run_workaround_issue_316 at /Users/madanibezoui/.julia/packages/HiGHS/4ZEBB/src/MOI_wrapper.jl:2275 [inlined]
+#42 at /Users/madanibezoui/.julia/packages/HiGHS/4ZEBB/src/MOI_wrapper.jl:2318 [inlined]
+disable_sigint at ./c.jl:167
+optimize! at /Users/madanibezoui/.julia/packages/HiGHS/4ZEBB/src/MOI_wrapper.jl:2318
+optimize! at /Users/madanibezoui/.julia/packages/MathOptInterface/13jDB/src/Bridges/bridge_optimizer.jl:367 [inlined]
+optimize! at /Users/madanibezoui/.julia/packages/MathOptInterface/13jDB/src/Utilities/cachingoptimizer.jl:379
+jfptr_optimizeNOT._7925 at /Users/madanibezoui/.julia/compiled/v1.11/HiGHS/WFic5_PSiSK.dylib (unknown line)
+#optimize!#105 at /Users/madanibezoui/.julia/packages/JuMP/Y8Mtc/src/optimizer_interface.jl:633
+optimize! at /Users/madanibezoui/.julia/packages/JuMP/Y8Mtc/src/optimizer_interface.jl:569 [inlined]
+#explain_levers#106 at /Users/madanibezoui/Documents/Projects/XOPT/experiments/src/levers.jl:108
+explain_levers at /Users/madanibezoui/Documents/Projects/XOPT/experiments/src/levers.jl:96
+unknown function (ip: 0x140e8c067)
+jl_apply at /Users/julia/.julia/scratchspaces/a66863c6-20e8-4ff4-8a62-49f30b1f605e/agent-cache/default-honeycrisp-R17H3W25T9.0/build/default-honeycrisp-R17H3W25T9-0/julialang/julia-release-1-dot-11/src/./julia.h:2157 [inlined]
+do_call at /Users/julia/.julia/scratchspaces/a66863c6-20e8-4ff4-8a62-49f30b1f605e/agent-cache/default-honeycrisp-R17H3W25T9.0/build/default-honeycrisp-R17H3W25T9-0/julialang/julia-release-1-dot-11/src/interpreter.c:126
+eval_body at /Users/julia/.julia/scratchspaces/a66863c6-20e8-4ff4-8a62-49f30b1f605e/agent-cache/default-honeycrisp-R17H3W25T9.0/build/default-honeycrisp-R17H3W25T9-0/julialang/julia-release-1-dot-11/src/interpreter.c:562
+jl_interpret_toplevel_thunk at /Users/julia/.julia/scratchspaces/a66863c6-20e8-4ff4-8a62-49f30b1f605e/agent-cache/default-honeycrisp-R17H3W25T9.0/build/default-honeycrisp-R17H3W25T9-0/julialang/julia-release-1-dot-11/src/interpreter.c:824
+jl_toplevel_eval_flex at /Users/julia/.julia/scratchspaces/a66863c6-20e8-4ff4-8a62-49f30b1f605e/agent-cache/default-honeycrisp-R17H3W25T9.0/build/default-honeycrisp-R17H3W25T9-0/julialang/julia-release-1-dot-11/src/toplevel.c:943
+jl_toplevel_eval_flex at /Users/julia/.julia/scratchspaces/a66863c6-20e8-4ff4-8a62-49f30b1f605e/agent-cache/default-honeycrisp-R17H3W25T9.0/build/default-honeycrisp-R17H3W25T9-0/julialang/julia-release-1-dot-11/src/toplevel.c:886
+ijl_toplevel_eval at /Users/julia/.julia/scratchspaces/a66863c6-20e8-4ff4-8a62-49f30b1f605e/agent-cache/default-honeycrisp-R17H3W25T9.0/build/default-honeycrisp-R17H3W25T9-0/julialang/julia-release-1-dot-11/src/toplevel.c:952 [inlined]
+ijl_toplevel_eval_in at /Users/julia/.julia/scratchspaces/a66863c6-20e8-4ff4-8a62-49f30b1f605e/agent-cache/default-honeycrisp-R17H3W25T9.0/build/default-honeycrisp-R17H3W25T9-0/julialang/julia-release-1-dot-11/src/toplevel.c:994
+eval at ./boot.jl:430 [inlined]
+include_string at ./loading.jl:2734
+_include at ./loading.jl:2794
+include at ./Base.jl:562
+jfptr_include_47096.1 at /Users/madanibezoui/.julia/juliaup/julia-1.11.6+0.aarch64.apple.darwin14/lib/julia/sys.dylib (unknown line)
+exec_options at ./client.jl:323
+_start at ./client.jl:531
+jfptr__start_73912.1 at /Users/madanibezoui/.julia/juliaup/julia-1.11.6+0.aarch64.apple.darwin14/lib/julia/sys.dylib (unknown line)
+jl_apply at /Users/julia/.julia/scratchspaces/a66863c6-20e8-4ff4-8a62-49f30b1f605e/agent-cache/default-honeycrisp-R17H3W25T9.0/build/default-honeycrisp-R17H3W25T9-0/julialang/julia-release-1-dot-11/src/./julia.h:2157 [inlined]
+true_main at /Users/julia/.julia/scratchspaces/a66863c6-20e8-4ff4-8a62-49f30b1f605e/agent-cache/default-honeycrisp-R17H3W25T9.0/build/default-honeycrisp-R17H3W25T9-0/julialang/julia-release-1-dot-11/src/jlapi.c:900
+jl_repl_entrypoint at /Users/julia/.julia/scratchspaces/a66863c6-20e8-4ff4-8a62-49f30b1f605e/agent-cache/default-honeycrisp-R17H3W25T9.0/build/default-honeycrisp-R17H3W25T9-0/julialang/julia-release-1-dot-11/src/jlapi.c:1059
+unknown function (ip: 0x0)
+Allocations: 65573363 (Pool: 65571330; Big: 2033); GC: 56
+retail_I3_T8_s5|strong|F|dual => TIME_LIMIT
+retail_I2_T6_s4|strong|PH|dual => SOLVER_INFEASIBLE
+retail_I3_T8_s5|weak|FPH|dual => TIME_LIMIT
+retail_I5_T11_s3|weak|FPH|dual => TIME_LIMIT
+retail_I3_T8_s1|strong|PH|trajectory => TIME_LIMIT
+retail_I3_T8_s4|weak|F|dual => TIME_LIMIT
+retail_I5_T8_s3|weak|FPH|dual => TIME_LIMIT

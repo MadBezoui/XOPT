@@ -1,0 +1,31 @@
+{
+  "url": "https://zenodo.org/records/18110317/files/felix-engelhardt/CE4IO-v1.1.zip",
+  "doi": "10.5281/zenodo.18110317",
+  "version": "v1.1",
+  "archive_sha256": "4ebc2cb9f334ab51bb24809bfdaaf64e6a91c2b00de6fb8acbe3e559ac18d90b",
+  "archive_md5": "01015821de8baa1662a70f76da8a0026",
+  "retrieval_date": "2026-10-16",
+  "license": "AGPL-3.0-only",
+  "files": [
+    {
+      "file": "experiments/vendor/felix-engelhardt-CE4IO-ce443d5/main.py",
+      "sha256": "4c55dec686e19c670d3fa55bf8835330201c6eb62f9470569e77bd1f1a017446"
+    },
+    {
+      "file": "experiments/vendor/felix-engelhardt-CE4IO-ce443d5/solver.py",
+      "sha256": "ffaf71ea5e399ed3f857515dd2a148896ff06c70fc724ca1810798a7524b4e42"
+    },
+    {
+      "file": "experiments/vendor/felix-engelhardt-CE4IO-ce443d5/IO.py",
+      "sha256": "6c3d230cf67ad873e9be2749478bb3fecbb22a049152b847df1927e82d88e280"
+    },
+    {
+      "file": "experiments/vendor/felix-engelhardt-CE4IO-ce443d5/README.md",
+      "sha256": "1eba83a5c0fde89709753555cef71cf8016f651050f92f178898c7cf06dfb7c3"
+    },
+    {
+      "file": "experiments/vendor/felix-engelhardt-CE4IO-ce443d5/LICENSE",
+      "sha256": "8486a10c4393cee1c25392769ddd3b2d6c242d6ec7928e1414efff7dfb2f07ef"
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+/release/
+/results/archive_v1/
+/results/artifact_sha256.json
+/results/pdf_preview/
+/results/pdf_review/
+/results/pdf_review.json
+/research/
+__pycache__/
+*.pyc
+*.aux
+*.log

@@ -1,0 +1,198 @@
+{
+  "protocol": "experiments/docs/revision_protocol_20261017.md",
+  "runs": 250,
+  "retained_attempts": 256,
+  "retained_feasible": 182,
+  "timing_repair": {
+    "extra_runs": 6,
+    "interrupted_original_runs": 4,
+    "paired_blocks": 3,
+    "original_extended_statuses": {
+      "TIME_LIMIT": 27,
+      "SOLVER_VALIDATED": 24,
+      "FEASIBLE_TIME_LIMIT": 21,
+      "FEASIBLE_BASELINE": 18
+    },
+    "repair_statuses": {
+      "SOLVER_VALIDATED": 2,
+      "FEASIBLE_TIME_LIMIT": 2,
+      "TIME_LIMIT": 2
+    },
+    "max_elapsed_overrun_controlled_seconds": 0.20376110076904297,
+    "all_repeat_deadlines_passed": true
+  },
+  "profiles": {
+    "capacity_stress": {
+      "attempts": 32,
+      "statuses": {
+        "SOLVER_VALIDATED": 30,
+        "SOLVER_INFEASIBLE": 2
+      },
+      "feasible": 30,
+      "optimal": 30
+    },
+    "compound": {
+      "attempts": 128,
+      "statuses": {
+        "SOLVER_VALIDATED": 85,
+        "SOLVER_INFEASIBLE": 43
+      },
+      "feasible": 85,
+      "optimal": 85
+    },
+    "extended": {
+      "attempts": 90,
+      "statuses": {
+        "TIME_LIMIT": 26,
+        "SOLVER_VALIDATED": 25,
+        "FEASIBLE_TIME_LIMIT": 21,
+        "FEASIBLE_BASELINE": 18
+      },
+      "feasible": 64,
+      "optimal": 25
+    }
+  },
+  "paired_optima": {
+    "n": 12,
+    "max_objective_difference": 3.712918861253911e-12
+  },
+  "long_budgets": [
+    {
+      "budget": 20.0,
+      "method": "cold",
+      "n": 6,
+      "feasible": 0,
+      "optimal": 0,
+      "median_first_seconds": null,
+      "median_relative_gap": null
+    },
+    {
+      "budget": 20.0,
+      "method": "warm",
+      "n": 6,
+      "feasible": 6,
+      "optimal": 1,
+      "median_first_seconds": 1.7563979625701904,
+      "median_relative_gap": 0.1344297129381217
+    },
+    {
+      "budget": 60.0,
+      "method": "cold",
+      "n": 6,
+      "feasible": 2,
+      "optimal": 2,
+      "median_first_seconds": 27.66767942905426,
+      "median_relative_gap": 1.2327708228194557e-13
+    },
+    {
+      "budget": 60.0,
+      "method": "warm",
+      "n": 6,
+      "feasible": 6,
+      "optimal": 2,
+      "median_first_seconds": 1.8331520557403564,
+      "median_relative_gap": 0.0474433827531698
+    },
+    {
+      "budget": 120.0,
+      "method": "cold",
+      "n": 6,
+      "feasible": 4,
+      "optimal": 4,
+      "median_first_seconds": 39.77463710308075,
+      "median_relative_gap": 1.2327708228194557e-13
+    },
+    {
+      "budget": 120.0,
+      "method": "warm",
+      "n": 6,
+      "feasible": 6,
+      "optimal": 4,
+      "median_first_seconds": 1.7730979919433594,
+      "median_relative_gap": 4.075233006859128e-15
+    },
+    {
+      "budget": 300.0,
+      "method": "cold",
+      "n": 6,
+      "feasible": 4,
+      "optimal": 4,
+      "median_first_seconds": 42.03133046627045,
+      "median_relative_gap": 1.2327708228194557e-13
+    },
+    {
+      "budget": 300.0,
+      "method": "warm",
+      "n": 6,
+      "feasible": 6,
+      "optimal": 4,
+      "median_first_seconds": 1.8218770027160645,
+      "median_relative_gap": 4.075233006859128e-15
+    }
+  ],
+  "twenty_seconds": {
+    "baseline": {
+      "n": 18,
+      "feasible": 18,
+      "optimal": 0,
+      "statuses": {
+        "FEASIBLE_BASELINE": 18
+      },
+      "median_first_seconds": 1.7571009397506714
+    },
+    "cold": {
+      "n": 18,
+      "feasible": 2,
+      "optimal": 2,
+      "statuses": {
+        "TIME_LIMIT": 16,
+        "SOLVER_VALIDATED": 2
+      },
+      "median_first_seconds": 6.899303913116455
+    },
+    "warm": {
+      "n": 18,
+      "feasible": 16,
+      "optimal": 3,
+      "statuses": {
+        "FEASIBLE_TIME_LIMIT": 13,
+        "SOLVER_VALIDATED": 3,
+        "TIME_LIMIT": 2
+      },
+      "median_first_seconds": 1.7563979625701904
+    }
+  },
+  "compound_pairs": {
+    "adjacent_solved_pairs": 57,
+    "strict_cost_decreases": 5,
+    "largest_positive_increase": 3.241851231905457e-14,
+    "physical_statuses_across_attempts": {
+      "OPTIMAL": 128
+    },
+    "common_counts": {
+      "hospital|2|strong": 2,
+      "hospital|2|weak": 2,
+      "hospital|3|strong": 0,
+      "hospital|3|weak": 0,
+      "retail|2|strong": 1,
+      "retail|2|weak": 2,
+      "retail|3|strong": 0,
+      "retail|3|weak": 0
+    }
+  },
+  "capacity": {
+    "classification_counts": {
+      "nominal_winner": 20,
+      "cost_improvement": 6,
+      "physical_restoration": 4,
+      "no_validated_incumbent": 2
+    },
+    "physically_restorable": 4,
+    "nominal_physical_infeasible": 6,
+    "peak_utilization_range": [
+      0.5503006872957353,
+      1.0
+    ],
+    "diagnostic_seconds_repeated_per_mode": true
+  }
+}

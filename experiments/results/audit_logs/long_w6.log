@@ -1,0 +1,8 @@
+retail_I10_T32_s1|strong|warm|1800.0 => SOLVER_VALIDATED
+retail_I5_T24_s1|weak|warm|1800.0 => SOLVER_VALIDATED
+hospital_I10_T11_s2|strong|warm|600.0 => SOLVER_VALIDATED
+hospital_I10_T11_s3|weak|warm|600.0 => SOLVER_VALIDATED
+retail_I10_T32_s2|strong|warm|600.0 => FEASIBLE_TIME_LIMIT
+retail_I10_T32_s3|weak|warm|600.0 => FEASIBLE_TIME_LIMIT
+retail_I5_T24_s2|strong|warm|600.0 => SOLVER_VALIDATED
+retail_I5_T24_s3|weak|warm|600.0 => SOLVER_VALIDATED

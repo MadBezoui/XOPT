@@ -1,0 +1,106 @@
+[
+  {
+    "file": "data/raw/online_retail.zip",
+    "url": "https://archive.ics.uci.edu/static/public/352/online+retail.zip",
+    "bytes": 23715478,
+    "sha256": "f5385cbb54bbebf7196389109c6b0621faab0c304e3702548165e71c84aede8b",
+    "license": "CC-BY-4.0",
+    "retrieved_utc": "2026-10-16T01:01:49.565703+00:00"
+  },
+  {
+    "file": "data/raw/nhs_2024-04.csv",
+    "url": "https://www.england.nhs.uk/statistics/wp-content/uploads/sites/2/2024/11/Monthly-AE-April-2024-revised.csv",
+    "bytes": 28754,
+    "sha256": "0e29d9ec984f9691d632ce11b95339548e2f18b01033636d57d7542291fc4324",
+    "license": "Open Government Licence v3.0",
+    "retrieved_utc": "2026-10-16T01:01:49.775619+00:00"
+  },
+  {
+    "file": "data/raw/nhs_2024-05.csv",
+    "url": "https://www.england.nhs.uk/statistics/wp-content/uploads/sites/2/2024/06/Monthly-AE-May-2024.csv",
+    "bytes": 28407,
+    "sha256": "8c0b53860f5e5fd5d9d905ac7f3bc4064001bee1cd839d590705162ecb37e5ca",
+    "license": "Open Government Licence v3.0",
+    "retrieved_utc": "2026-10-16T01:01:50.010528+00:00"
+  },
+  {
+    "file": "data/raw/nhs_2024-06.csv",
+    "url": "https://www.england.nhs.uk/statistics/wp-content/uploads/sites/2/2024/07/Monthly-AE-June-2024.csv",
+    "bytes": 28545,
+    "sha256": "4dec9bfed872a9eef04706d5568e8d71950626f3867157d908d38958cd1b867a",
+    "license": "Open Government Licence v3.0",
+    "retrieved_utc": "2026-10-16T01:01:50.161144+00:00"
+  },
+  {
+    "file": "data/raw/nhs_2024-07.csv",
+    "url": "https://www.england.nhs.uk/statistics/wp-content/uploads/sites/2/2024/11/Monthly-AE-July-2024-revised.csv",
+    "bytes": 28643,
+    "sha256": "37196f2ac98858b62f205dce6425178e49dfe82fad669f622b7d21277c2c896a",
+    "license": "Open Government Licence v3.0",
+    "retrieved_utc": "2026-10-16T01:01:50.325962+00:00"
+  },
+  {
+    "file": "data/raw/nhs_2024-08.csv",
+    "url": "https://www.england.nhs.uk/statistics/wp-content/uploads/sites/2/2024/09/Monthly-AE-August-2024.csv",
+    "bytes": 28947,
+    "sha256": "fd0f6aa35acf85d00745dfecba6978f0b80499570cd973259f4bfdd3909f7aa4",
+    "license": "Open Government Licence v3.0",
+    "retrieved_utc": "2026-10-16T01:01:50.534146+00:00"
+  },
+  {
+    "file": "data/raw/nhs_2024-09.csv",
+    "url": "https://www.england.nhs.uk/statistics/wp-content/uploads/sites/2/2024/10/Monthly-AE-September-2024.csv",
+    "bytes": 30674,
+    "sha256": "b100d50e456fbfdfaa5729d34f7b720f31e8220f650f32a96c1cf33d6e363cb8",
+    "license": "Open Government Licence v3.0",
+    "retrieved_utc": "2026-10-16T01:01:50.693575+00:00"
+  },
+  {
+    "file": "data/raw/nhs_2024-10.csv",
+    "url": "https://www.england.nhs.uk/statistics/wp-content/uploads/sites/2/2025/05/Monthly-AE-October-2024-revised.csv",
+    "bytes": 29295,
+    "sha256": "934223ea6747ebb9aa7b2d7e96a2dacf6a1554c7c7e4f4ca025bd989252896e6",
+    "license": "Open Government Licence v3.0",
+    "retrieved_utc": "2026-10-16T01:01:50.845234+00:00"
+  },
+  {
+    "file": "data/raw/nhs_2024-11.csv",
+    "url": "https://www.england.nhs.uk/statistics/wp-content/uploads/sites/2/2025/05/Monthly-AE-November-2024-revised.csv",
+    "bytes": 29504,
+    "sha256": "0e3b3269074f617c6b70bed1b09c2901e366aace318f052fe8070a911a88f5c2",
+    "license": "Open Government Licence v3.0",
+    "retrieved_utc": "2026-10-16T01:01:51.060748+00:00"
+  },
+  {
+    "file": "data/raw/nhs_2024-12.csv",
+    "url": "https://www.england.nhs.uk/statistics/wp-content/uploads/sites/2/2025/01/Monthly-AE-December-2024.csv",
+    "bytes": 29529,
+    "sha256": "938e112a91a57154874ce86001646a620f884800f1bc82d17f5436ca4108b148",
+    "license": "Open Government Licence v3.0",
+    "retrieved_utc": "2026-10-16T01:01:51.212835+00:00"
+  },
+  {
+    "file": "data/raw/nhs_2025-01.csv",
+    "url": "https://www.england.nhs.uk/statistics/wp-content/uploads/sites/2/2025/02/Monthly-AE-January-2025.csv",
+    "bytes": 29284,
+    "sha256": "b99ff7e2b81f06c11190cfda73e87f90c8ee08b942633fe180fb2295475fb3d4",
+    "license": "Open Government Licence v3.0",
+    "retrieved_utc": "2026-10-16T01:01:51.367382+00:00"
+  },
+  {
+    "file": "data/raw/nhs_2025-02.csv",
+    "url": "https://www.england.nhs.uk/statistics/wp-content/uploads/sites/2/2025/05/Monthly-AE-February-2025-revised.csv",
+    "bytes": 29445,
+    "sha256": "c524a9b94de00d290a4724e9b59ee25e92d8eaa554b1af8bfe7360ccbef2d6cb",
+    "license": "Open Government Licence v3.0",
+    "retrieved_utc": "2026-10-16T01:01:51.583794+00:00"
+  },
+  {
+    "file": "data/raw/nhs_2025-03.csv",
+    "url": "https://www.england.nhs.uk/statistics/wp-content/uploads/sites/2/2025/04/Monthly-AE-March-2025.csv",
+    "bytes": 28883,
+    "sha256": "2983652e5536aa8d0656bf05ad5cd753084500d8428b9623803688b2f7b92b0b",
+    "license": "Open Government Licence v3.0",
+    "retrieved_utc": "2026-10-16T01:01:51.584225+00:00"
+  }
+]

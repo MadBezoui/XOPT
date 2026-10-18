@@ -1,0 +1,12 @@
+Test Summary:                  | Pass  Total  Time
+Research implementation exists |    1      1  0.0s
+Test Summary:                                | Pass  Total  Time
+Oracle incumbent cannot establish acceptance |    6      6  0.0s
+Test Summary:                   | Pass  Total  Time
+Analytical two-period benchmark |   19     19  0.9s
+Test Summary:                                    | Pass  Total  Time
+Complete pattern baseline across seeds and modes |   44     44  1.7s
+Test Summary:                                    | Pass  Total  Time
+Capacity menu uses scenario-specific comparisons |    4      4  0.5s
+Test Summary:                                  | Pass  Total  Time
+Conjunction foil, complement and additive cuts |   10     10  0.2s

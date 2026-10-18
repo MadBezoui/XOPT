@@ -1,0 +1,25 @@
+{
+  "paired_queries": 84,
+  "runs": 168,
+  "jointly_validated": 74,
+  "status_disagreements": [],
+  "max_objective_difference": 8.867351297681125e-13,
+  "independent_author_software_execution": false,
+  "reference": "arXiv:2510.17624v2, Algorithm 1 and equation (14)",
+  "methods": {
+    "xopt": {
+      "counts": {
+        "SOLVER_VALIDATED": 74,
+        "SOLVER_INFEASIBLE": 10
+      },
+      "median_seconds_all_queries": 0.13580060005187988
+    },
+    "literature": {
+      "counts": {
+        "SOLVER_VALIDATED": 74,
+        "SOLVER_INFEASIBLE": 10
+      },
+      "median_seconds_all_queries": 0.14281654357910156
+    }
+  }
+}

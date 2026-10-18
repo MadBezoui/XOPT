@@ -1,0 +1,26 @@
+{
+  "passed": true,
+  "primary_runs": 320,
+  "raw_files_verified": 13,
+  "saved_witnesses_verified": 258,
+  "radius_audits": 50,
+  "single_lever_runs": 108,
+  "core_sha256": "8575aa82dc7dcf11dc6da1e993837fefd3795aa19b35d5b11265070662545fd9",
+  "checks": [
+    "three content directories/no root files (Git metadata excluded)",
+    "download checksums",
+    "expected run counts and unique keys",
+    "core provenance",
+    "saved witness numerical feasibility and reported oracle bounds",
+    "sparsity monotonicity",
+    "radius bracketing",
+    "single-lever validity",
+    "supplementary counts, source hashes and saved-record digests",
+    "fresh supplementary incumbent checks"
+  ],
+  "external_comparison_runs": 168,
+  "supplementary_runs": 250,
+  "supplementary_retained_attempts": 256,
+  "supplementary_incumbents_freshly_verified": 182,
+  "arithmetic": "Float64, tolerance-based checks; no exact proof certificates"
+}

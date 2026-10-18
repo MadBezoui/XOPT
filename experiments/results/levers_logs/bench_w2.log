@@ -1,0 +1,61 @@
+retail_I3_T8_s5|weak|PH|dual => TIME_LIMIT
+
+[84151] signal 15: Terminated: 15
+in expression starting at /Users/madanibezoui/Documents/Projects/XOPT/experiments/scripts/run_levers.jl:41
+_ZL10solveHyperiPKiS0_PKdS0_S0_S0_S2_P11HVectorBaseIdE at /Users/madanibezoui/.julia/artifacts/5a3d28a9c8ef24dab596551d0b991b2f9d029ee7/lib/libhighs.1.15.dylib (unknown line)
+_ZNK7HFactor6btranLER11HVectorBaseIdEdP15HighsTimerClock at /Users/madanibezoui/.julia/artifacts/5a3d28a9c8ef24dab596551d0b991b2f9d029ee7/lib/libhighs.1.15.dylib (unknown line)
+_ZNK7HFactor9btranCallER11HVectorBaseIdEdP15HighsTimerClock at /Users/madanibezoui/.julia/artifacts/5a3d28a9c8ef24dab596551d0b991b2f9d029ee7/lib/libhighs.1.15.dylib (unknown line)
+_ZNK11HSimplexNla5btranER11HVectorBaseIdEdP15HighsTimerClock at /Users/madanibezoui/.julia/artifacts/5a3d28a9c8ef24dab596551d0b991b2f9d029ee7/lib/libhighs.1.15.dylib (unknown line)
+_ZN8HEkkDual9chooseRowEv at /Users/madanibezoui/.julia/artifacts/5a3d28a9c8ef24dab596551d0b991b2f9d029ee7/lib/libhighs.1.15.dylib (unknown line)
+_ZN8HEkkDual7iterateEv at /Users/madanibezoui/.julia/artifacts/5a3d28a9c8ef24dab596551d0b991b2f9d029ee7/lib/libhighs.1.15.dylib (unknown line)
+_ZN8HEkkDual11solvePhase2Ev at /Users/madanibezoui/.julia/artifacts/5a3d28a9c8ef24dab596551d0b991b2f9d029ee7/lib/libhighs.1.15.dylib (unknown line)
+_ZN8HEkkDual5solveEb at /Users/madanibezoui/.julia/artifacts/5a3d28a9c8ef24dab596551d0b991b2f9d029ee7/lib/libhighs.1.15.dylib (unknown line)
+_ZN4HEkk5solveEb at /Users/madanibezoui/.julia/artifacts/5a3d28a9c8ef24dab596551d0b991b2f9d029ee7/lib/libhighs.1.15.dylib (unknown line)
+_Z14solveLpSimplexR19HighsLpSolverObject at /Users/madanibezoui/.julia/artifacts/5a3d28a9c8ef24dab596551d0b991b2f9d029ee7/lib/libhighs.1.15.dylib (unknown line)
+_ZZ7solveLpR19HighsLpSolverObjectNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEEENK3$_0clEv at /Users/madanibezoui/.julia/artifacts/5a3d28a9c8ef24dab596551d0b991b2f9d029ee7/lib/libhighs.1.15.dylib (unknown line)
+_Z7solveLpR19HighsLpSolverObjectNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE at /Users/madanibezoui/.julia/artifacts/5a3d28a9c8ef24dab596551d0b991b2f9d029ee7/lib/libhighs.1.15.dylib (unknown line)
+_ZZN5Highs19calledOptimizeModelEvENK3$_0clER7HighsLpRKNSt3__112basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEERd at /Users/madanibezoui/.julia/artifacts/5a3d28a9c8ef24dab596551d0b991b2f9d029ee7/lib/libhighs.1.15.dylib (unknown line)
+_ZN5Highs19calledOptimizeModelEv at /Users/madanibezoui/.julia/artifacts/5a3d28a9c8ef24dab596551d0b991b2f9d029ee7/lib/libhighs.1.15.dylib (unknown line)
+_ZN17HighsLpRelaxation3runEb at /Users/madanibezoui/.julia/artifacts/5a3d28a9c8ef24dab596551d0b991b2f9d029ee7/lib/libhighs.1.15.dylib (unknown line)
+_ZN17HighsLpRelaxation9resolveLpEP11HighsDomain at /Users/madanibezoui/.julia/artifacts/5a3d28a9c8ef24dab596551d0b991b2f9d029ee7/lib/libhighs.1.15.dylib (unknown line)
+_ZN11HighsSearch12evaluateNodeEv at /Users/madanibezoui/.julia/artifacts/5a3d28a9c8ef24dab596551d0b991b2f9d029ee7/lib/libhighs.1.15.dylib (unknown line)
+_ZN11HighsSearch4diveEx at /Users/madanibezoui/.julia/artifacts/5a3d28a9c8ef24dab596551d0b991b2f9d029ee7/lib/libhighs.1.15.dylib (unknown line)
+_ZZZN14HighsMipSolver3runEvENK4$_22clERKNSt3__16vectorIiNS1_9allocatorIiEEEERNS2_IZNS_3runEvE11RestartVoteNS3_IS8_EEEEbiidENKUliE_clEi at /Users/madanibezoui/.julia/artifacts/5a3d28a9c8ef24dab596551d0b991b2f9d029ee7/lib/libhighs.1.15.dylib (unknown line)
+_ZN14HighsMipSolver3runEv at /Users/madanibezoui/.julia/artifacts/5a3d28a9c8ef24dab596551d0b991b2f9d029ee7/lib/libhighs.1.15.dylib (unknown line)
+_ZN5Highs12callSolveMipEv at /Users/madanibezoui/.julia/artifacts/5a3d28a9c8ef24dab596551d0b991b2f9d029ee7/lib/libhighs.1.15.dylib (unknown line)
+_ZN5Highs19calledOptimizeModelEv at /Users/madanibezoui/.julia/artifacts/5a3d28a9c8ef24dab596551d0b991b2f9d029ee7/lib/libhighs.1.15.dylib (unknown line)
+_ZN5Highs13optimizeModelEv at /Users/madanibezoui/.julia/artifacts/5a3d28a9c8ef24dab596551d0b991b2f9d029ee7/lib/libhighs.1.15.dylib (unknown line)
+retail_I5_T11_s2|strong|FPH|trajectory => TIME_LIMIT
+retail_I1_T4_s4|strong|PH|trajectory => SOLVER_INFEASIBLE
+retail_I2_T6_s2|strong|F|dual => SOLVER_VALIDATED
+retail_I2_T6_s5|weak|F|dual => SOLVER_VALIDATED
+retail_I5_T8_s3|strong|PH|trajectory => TIME_LIMIT
+retail_I5_T8_s3|strong|FPH|trajectory => TIME_LIMIT
+retail_I5_T11_s3|weak|PH|dual => TIME_LIMIT
+retail_I2_T6_s1|strong|F|dual => SOLVER_VALIDATED
+retail_I2_T6_s5|weak|FPH|dual => SOLVER_VALIDATED
+retail_I3_T8_s1|strong|PH|dual => TIME_LIMIT
+retail_I2_T6_s3|strong|F|dual => SOLVER_VALIDATED
+retail_I5_T8_s1|weak|PH|dual => TIME_LIMIT
+retail_I1_T4_s4|strong|FPH|dual => SOLVER_INFEASIBLE
+retail_I5_T8_s3|strong|F|dual => TIME_LIMIT
+retail_I2_T6_s3|strong|FPH|trajectory => SOLVER_VALIDATED
+retail_I5_T11_s2|weak|PH|trajectory => TIME_LIMIT
+retail_I5_T11_s3|weak|F|dual => TIME_LIMIT
+retail_I1_T4_s2|weak|FPH|dual => SOLVER_VALIDATED
+retail_I3_T8_s4|strong|FPH|trajectory => TIME_LIMIT
+retail_I5_T8_s1|weak|FPH|dual => TIME_LIMIT
+retail_I5_T8_s1|weak|F|dual => TIME_LIMIT
+retail_I1_T4_s5|strong|PH|dual => SOLVER_VALIDATED
+retail_I3_T8_s2|strong|PH|trajectory => SOLVER_VALIDATED
+retail_I5_T8_s3|weak|PH|trajectory => TIME_LIMIT
+retail_I2_T6_s1|strong|FPH|trajectory => SOLVER_VALIDATED
+retail_I5_T8_s2|weak|FPH|dual => TIME_LIMIT
+retail_I2_T6_s2|weak|PH|trajectory => SOLVER_VALIDATED
+retail_I1_T4_s2|strong|PH|dual => SOLVER_VALIDATED
+retail_I3_T8_s1|strong|FPH|trajectory => SOLVER_VALIDATED
+retail_I1_T4_s1|strong|FPH|dual => SOLVER_INFEASIBLE
+retail_I3_T8_s5|strong|PH|trajectory => TIME_LIMIT
+retail_I5_T11_s2|strong|FPH|dual => TIME_LIMIT
+retail_I5_T8_s2|strong|FPH|dual => TIME_LIMIT
+retail_I1_T4_s1|strong|FPH|trajectory => SOLVER_INFEASIBLE

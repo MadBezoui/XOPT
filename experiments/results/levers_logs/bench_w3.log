@@ -1,0 +1,41 @@
+retail_I3_T8_s3|strong|FPH|dual => SOLVER_VALIDATED
+retail_I3_T8_s2|strong|F|dual => SOLVER_VALIDATED
+retail_I2_T6_s3|weak|F|dual => SOLVER_VALIDATED
+retail_I3_T8_s2|weak|F|dual => SOLVER_VALIDATED
+retail_I1_T4_s4|weak|PH|dual => SOLVER_INFEASIBLE
+retail_I2_T6_s4|weak|FPH|dual => SOLVER_VALIDATED
+retail_I2_T6_s4|weak|PH|trajectory => SOLVER_INFEASIBLE
+
+[84152] signal 15: Terminated: 15
+in expression starting at /Users/madanibezoui/Documents/Projects/XOPT/experiments/scripts/run_levers.jl:41
+_Z12Highs_genrcmiiPKiS0_Pi at /Users/madanibezoui/.julia/artifacts/5a3d28a9c8ef24dab596551d0b991b2f9d029ee7/lib/libhighs.1.15.dylib (unknown line)
+unknown function (ip: 0x0)
+Allocations: 47258010 (Pool: 47256005; Big: 2005); GC: 31
+retail_I5_T11_s1|strong|PH|trajectory => TIME_LIMIT
+retail_I3_T8_s3|strong|PH|dual => TIME_LIMIT
+retail_I2_T6_s4|strong|F|dual => SOLVER_VALIDATED
+retail_I2_T6_s2|weak|FPH|dual => SOLVER_VALIDATED
+retail_I1_T4_s5|weak|FPH|trajectory => SOLVER_VALIDATED
+retail_I1_T4_s4|weak|FPH|trajectory => SOLVER_INFEASIBLE
+retail_I3_T8_s3|weak|FPH|trajectory => SOLVER_VALIDATED
+retail_I2_T6_s5|strong|F|dual => SOLVER_VALIDATED
+retail_I1_T4_s1|strong|PH|dual => SOLVER_INFEASIBLE
+retail_I2_T6_s2|strong|PH|dual => SOLVER_VALIDATED
+retail_I2_T6_s5|strong|FPH|trajectory => SOLVER_VALIDATED
+retail_I5_T11_s1|weak|PH|dual => TIME_LIMIT
+retail_I5_T11_s1|strong|FPH|trajectory => TIME_LIMIT
+retail_I2_T6_s1|weak|FPH|trajectory => SOLVER_VALIDATED
+retail_I5_T8_s1|strong|F|dual => TIME_LIMIT
+retail_I5_T8_s3|strong|PH|dual => TIME_LIMIT
+retail_I3_T8_s4|strong|FPH|dual => TIME_LIMIT
+retail_I5_T11_s2|strong|PH|trajectory => TIME_LIMIT
+retail_I2_T6_s3|weak|FPH|trajectory => SOLVER_VALIDATED
+retail_I1_T4_s1|weak|F|dual => SOLVER_INFEASIBLE
+retail_I2_T6_s3|strong|FPH|dual => SOLVER_VALIDATED
+retail_I5_T11_s2|weak|FPH|trajectory => TIME_LIMIT
+retail_I5_T11_s2|weak|FPH|dual => TIME_LIMIT
+retail_I1_T4_s5|weak|PH|trajectory => SOLVER_VALIDATED
+retail_I1_T4_s5|weak|F|dual => SOLVER_VALIDATED
+retail_I1_T4_s3|strong|FPH|dual => SOLVER_VALIDATED
+retail_I1_T4_s2|weak|PH|dual => SOLVER_VALIDATED
+retail_I5_T8_s1|strong|FPH|dual => TIME_LIMIT

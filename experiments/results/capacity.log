@@ -1,0 +1,16 @@
+capacity 1/16 hospital_I2_T6_s1|strong|ccg|3|0.0|0.02 => SOLVER_VALIDATED
+capacity 2/16 hospital_I2_T6_s4|weak|ccg|3|0.0|0.02 => SOLVER_VALIDATED
+capacity 3/16 retail_I2_T6_s4|strong|ccg|3|0.0|0.02 => SOLVER_VALIDATED
+capacity 4/16 hospital_I2_T6_s1|weak|ccg|3|0.0|0.02 => SOLVER_VALIDATED
+capacity 5/16 retail_I2_T6_s3|strong|ccg|3|0.0|0.02 => SOLVER_VALIDATED
+capacity 6/16 hospital_I2_T6_s2|strong|ccg|3|0.0|0.02 => SOLVER_VALIDATED
+capacity 7/16 hospital_I2_T6_s3|weak|ccg|3|0.0|0.02 => SOLVER_VALIDATED
+capacity 8/16 hospital_I2_T6_s4|strong|ccg|3|0.0|0.02 => SOLVER_VALIDATED
+capacity 9/16 hospital_I2_T6_s3|strong|ccg|3|0.0|0.02 => SOLVER_VALIDATED
+capacity 10/16 retail_I2_T6_s2|strong|ccg|3|0.0|0.02 => SOLVER_VALIDATED
+capacity 11/16 retail_I2_T6_s2|weak|ccg|3|0.0|0.02 => SOLVER_VALIDATED
+capacity 12/16 retail_I2_T6_s1|weak|ccg|3|0.0|0.02 => SOLVER_VALIDATED
+capacity 13/16 retail_I2_T6_s3|weak|ccg|3|0.0|0.02 => SOLVER_VALIDATED
+capacity 14/16 hospital_I2_T6_s2|weak|ccg|3|0.0|0.02 => SOLVER_VALIDATED
+capacity 15/16 retail_I2_T6_s1|strong|ccg|3|0.0|0.02 => SOLVER_VALIDATED
+capacity 16/16 retail_I2_T6_s4|weak|ccg|3|0.0|0.02 => SOLVER_VALIDATED

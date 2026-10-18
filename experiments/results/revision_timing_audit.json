@@ -1,0 +1,35 @@
+{
+  "rule": "Repeat both methods in every query/budget pair with elapsed-budget > max(1 second, 5% of budget). Preserve all original records. Selection uses timing alone.",
+  "cause": "macOS power logs confirm system sleep during the four affected runs; local raw log retained in article/archive/power_events_20261017.txt, excluded from publication.",
+  "affected": [
+    {
+      "key": "hospital_I10_T11_s1|weak|cold|120.0",
+      "budget": 120.0,
+      "elapsed": 353.6637771129608,
+      "recorded_utc": "2026-10-17T12:31:22.425",
+      "status": "TIME_LIMIT"
+    },
+    {
+      "key": "retail_I10_T32_s1|weak|cold|60.0",
+      "budget": 60.0,
+      "elapsed": 289.7769498825073,
+      "recorded_utc": "2026-10-17T12:36:12.662",
+      "status": "TIME_LIMIT"
+    },
+    {
+      "key": "retail_I10_T32_s1|weak|warm|60.0",
+      "budget": 60.0,
+      "elapsed": 678.6032979488373,
+      "recorded_utc": "2026-10-17T12:47:31.579",
+      "status": "FEASIBLE_TIME_LIMIT"
+    },
+    {
+      "key": "retail_I10_T32_s1|weak|warm|120.0",
+      "budget": 120.0,
+      "elapsed": 600.5293669700623,
+      "recorded_utc": "2026-10-17T13:01:25.075",
+      "status": "FEASIBLE_TIME_LIMIT"
+    }
+  ],
+  "original_file_sha256": "75517ad1dc0141484e6c310117b0037461176a58eebed4db9236a81a8e6da22d"
+}

@@ -1,0 +1,200 @@
+[
+  {
+    "family": "hospital",
+    "K": 1,
+    "mode": "strong",
+    "epsilon": 0.0,
+    "attempted": 4,
+    "validated": 4,
+    "paired_n": 4,
+    "paired_median": 0.37778555889214144,
+    "conditional_median": 0.37778555889214144
+  },
+  {
+    "family": "hospital",
+    "K": 1,
+    "mode": "weak",
+    "epsilon": 0.0,
+    "attempted": 4,
+    "validated": 4,
+    "paired_n": 4,
+    "paired_median": 0.3424992333099015,
+    "conditional_median": 0.3424992333099015
+  },
+  {
+    "family": "hospital",
+    "K": 1,
+    "mode": "weak",
+    "epsilon": 0.1,
+    "attempted": 4,
+    "validated": 4,
+    "paired_n": 4,
+    "paired_median": 0.30721290772766097,
+    "conditional_median": 0.30721290772766097
+  },
+  {
+    "family": "hospital",
+    "K": 2,
+    "mode": "strong",
+    "epsilon": 0.0,
+    "attempted": 4,
+    "validated": 4,
+    "paired_n": 4,
+    "paired_median": 0.3777855588921415,
+    "conditional_median": 0.3777855588921415
+  },
+  {
+    "family": "hospital",
+    "K": 2,
+    "mode": "weak",
+    "epsilon": 0.0,
+    "attempted": 4,
+    "validated": 4,
+    "paired_n": 4,
+    "paired_median": 0.3424992333099013,
+    "conditional_median": 0.3424992333099013
+  },
+  {
+    "family": "hospital",
+    "K": 2,
+    "mode": "weak",
+    "epsilon": 0.1,
+    "attempted": 4,
+    "validated": 4,
+    "paired_n": 4,
+    "paired_median": 0.30721290772766136,
+    "conditional_median": 0.30721290772766136
+  },
+  {
+    "family": "hospital",
+    "K": 6,
+    "mode": "strong",
+    "epsilon": 0.0,
+    "attempted": 4,
+    "validated": 4,
+    "paired_n": 4,
+    "paired_median": 0.3777855588921425,
+    "conditional_median": 0.3777855588921425
+  },
+  {
+    "family": "hospital",
+    "K": 6,
+    "mode": "weak",
+    "epsilon": 0.0,
+    "attempted": 4,
+    "validated": 4,
+    "paired_n": 4,
+    "paired_median": 0.34249923330990184,
+    "conditional_median": 0.34249923330990184
+  },
+  {
+    "family": "hospital",
+    "K": 6,
+    "mode": "weak",
+    "epsilon": 0.1,
+    "attempted": 4,
+    "validated": 4,
+    "paired_n": 4,
+    "paired_median": 0.3072129077276632,
+    "conditional_median": 0.3072129077276632
+  },
+  {
+    "family": "retail",
+    "K": 1,
+    "mode": "strong",
+    "epsilon": 0.0,
+    "attempted": 4,
+    "validated": 3,
+    "paired_n": 3,
+    "paired_median": 0.5166430788376255,
+    "conditional_median": 0.5166430788376255
+  },
+  {
+    "family": "retail",
+    "K": 1,
+    "mode": "weak",
+    "epsilon": 0.0,
+    "attempted": 4,
+    "validated": 3,
+    "paired_n": 3,
+    "paired_median": 0.4809233888942609,
+    "conditional_median": 0.4809233888942609
+  },
+  {
+    "family": "retail",
+    "K": 1,
+    "mode": "weak",
+    "epsilon": 0.1,
+    "attempted": 4,
+    "validated": 3,
+    "paired_n": 3,
+    "paired_median": 0.4452036989508972,
+    "conditional_median": 0.4452036989508972
+  },
+  {
+    "family": "retail",
+    "K": 2,
+    "mode": "strong",
+    "epsilon": 0.0,
+    "attempted": 4,
+    "validated": 4,
+    "paired_n": 3,
+    "paired_median": 0.5166430788376256,
+    "conditional_median": 0.6043694190812481
+  },
+  {
+    "family": "retail",
+    "K": 2,
+    "mode": "weak",
+    "epsilon": 0.0,
+    "attempted": 4,
+    "validated": 4,
+    "paired_n": 3,
+    "paired_median": 0.48092338889426106,
+    "conditional_median": 0.5697836018649862
+  },
+  {
+    "family": "retail",
+    "K": 2,
+    "mode": "weak",
+    "epsilon": 0.1,
+    "attempted": 4,
+    "validated": 4,
+    "paired_n": 3,
+    "paired_median": 0.4452036989508977,
+    "conditional_median": 0.5351977846487244
+  },
+  {
+    "family": "retail",
+    "K": 6,
+    "mode": "strong",
+    "epsilon": 0.0,
+    "attempted": 4,
+    "validated": 4,
+    "paired_n": 3,
+    "paired_median": 0.5166430788376258,
+    "conditional_median": 0.6043694190812482
+  },
+  {
+    "family": "retail",
+    "K": 6,
+    "mode": "weak",
+    "epsilon": 0.0,
+    "attempted": 4,
+    "validated": 4,
+    "paired_n": 3,
+    "paired_median": 0.48092338889426073,
+    "conditional_median": 0.569783601864986
+  },
+  {
+    "family": "retail",
+    "K": 6,
+    "mode": "weak",
+    "epsilon": 0.1,
+    "attempted": 4,
+    "validated": 4,
+    "paired_n": 3,
+    "paired_median": 0.4452036989508975,
+    "conditional_median": 0.5351977846487245
+  }
+]
