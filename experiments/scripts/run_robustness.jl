@@ -2,6 +2,8 @@ using JSON3
 include(joinpath(@__DIR__,"..","src","XOPT.jl"));using .XOPT
 include(joinpath(@__DIR__,"..","src","robustness.jl"))
 root=normpath(joinpath(@__DIR__,"..",".."));out=joinpath(root,"experiments/results/robustness.jsonl")
+# Archived records are reused; set XOPT_RECOMPUTE=1 to recompute them.
+if isfile(out) && filesize(out)>0 && get(ENV,"XOPT_RECOMPUTE","")!="1"; println("Existing records kept: ",out); exit(0); end
 # Deterministic fixed-witness audit, all solver-validated CCG explanations in the main study.
 open(out,"w") do io
  for line in eachline(joinpath(root,"experiments/results/main.jsonl"))

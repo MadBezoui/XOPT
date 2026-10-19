@@ -5,7 +5,7 @@ Ce dépôt contient le code source, les données de référence et les résultat
 ## Organisation du dépôt
 
 - `experiments/src/` :
-  - `XOPT.jl` : modèles, oracle MILP, algorithme CCG (Column-and-Constraint Generation), multicut, énumération exacte, menus de capacité et validation numérique.
+  - `XOPT.jl` : modèles, oracle MILP, algorithme CCG (génération de contraintes de coût, *cost constraint generation*), multicut, énumération exacte, menus de capacité et validation numérique.
   - `anytime.jl` : initialisation conditionnelle par baseline, conservation des incumbents validés, bornes UB/LB et écarts sous limite de temps.
   - `robustness.jl` : calcul du rayon de stabilité d'un témoin fixé.
   - `audit.jl` : calibration de marge, séparation par scénario et borne de coordonnée.
@@ -14,9 +14,9 @@ Ce dépôt contient le code source, les données de référence et les résultat
   - `literature_cg.jl` : réimplémentation comparative indépendante de l'algorithme de génération de contraintes de la littérature.
 - `experiments/scripts/` : scripts d'exécution des expérimentations, d'analyse statistique et de reproduction.
 - `experiments/test/` : bancs de tests unitaires et de validation (Julia et Python).
-- `data/` : données brutes et prétraitées (NHS hospitalier, Online Retail, PGLib-UC) avec métadonnées de téléchargement et sommes de contrôle SHA-256.
+- `data/` : données brutes et prétraitées (NHS hospitalier, Online Retail), avec métadonnées de téléchargement et sommes de contrôle SHA-256. Les instances PGLib-UC sont dans `experiments/data/pglib_uc/`.
 - `experiments/results/` : jeux complets de résultats numériques (synthèses CSV et traces détaillées JSONL).
-- [Licence MIT du code](experiments/LICENSE), [périmètre des licences](experiments/LICENSING.md) et [citation](experiments/CITATION.cff).
+- [Licence MIT du code](LICENSE), [périmètre des licences](LICENSING.md) et [citation](../CITATION.cff).
 
 ## Reproduction des résultats
 
@@ -25,6 +25,7 @@ Ce dépôt contient le code source, les données de référence et les résultat
 - Julia 1.11 avec l'environnement verrouillé par `experiments/Manifest.toml`.
 - Python 3.11 avec les dépendances indiquées dans `experiments/requirements.txt`.
 - Le solveur HiGHS (libre et intégré dans l'environnement Julia, aucune licence commerciale requise).
+- Un environnement Python créé dans `.venv` à la racine du dépôt, ou hors du dépôt : le contrôle final (`validate_artifact.py`) refuse tout autre dossier visible à la racine.
 
 ### Lancement de la reproduction
 
@@ -33,6 +34,8 @@ Depuis la racine du dépôt :
 ```bash
 bash experiments/scripts/reproduce.sh
 ```
+
+Les pilotes réutilisent les enregistrements archivés, et le script relance alors surtout les tests et les analyses. Pour recalculer une étude, déplacez d'abord ses enregistrements hors de `experiments/results/`, ou définissez la variable d'environnement `XOPT_RECOMPUTE=1` pour la comparaison externe, les rayons de stabilité de `run_robustness.jl` et la référence à une coordonnée.
 
 ### Exécution des tests
 
@@ -67,7 +70,7 @@ julia --startup-file=no --project=experiments experiments/test/uc.jl
 5. **Étude 4 — Engagement de centrales (Unit Commitment)** :
    - Protocole : `experiments/docs/uc_protocol_20261017.md`
    - Script : `experiments/scripts/run_uc.jl`
-   - Données : `data/pglib_uc/`
+   - Données : `experiments/data/pglib_uc/` (provenance dans `PROVENANCE.md`)
    - Résultats : `experiments/results/uc_*`
 
 ## Interprétation des statuts du solveur

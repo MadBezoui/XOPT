@@ -1,15 +1,16 @@
 cff-version: 1.2.0
 message: "If you use this software or data, please cite it as below."
 type: software
-title: "XOPT: Sparse temporal counterfactuals with continuous recourse for mixed-integer planning"
+title: "XOPT v1.0.1: Research Artifact — Code, Data, and Experiments"
 authors:
   - family-names: "Bezoui"
     given-names: "Madani"
-version: "1.0.0"
-date-released: "2026-10-18"
+version: "1.0.1"
+doi: "10.5281/zenodo.23458561"
+date-released: "2026-10-19"
 repository-code: "https://github.com/MadBezoui/XOPT"
-url: "https://github.com/MadBezoui/XOPT/releases/tag/v1.0.0"
+url: "https://github.com/MadBezoui/XOPT/releases/tag/v1.0.1"
 license: MIT
 abstract: >-
   Julia implementation, datasets, and numerical experiments for sparse temporal
-  counterfactual explanations in mixed-integer optimization with fixed continuous recourse.
+  counterfactual explanations in mixed-integer planning with continuous recourse.

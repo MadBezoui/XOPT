@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 
 ROOT = Path(__file__).resolve().parents[2]
 RES, TAB, FIG = (ROOT / p for p in ['experiments/results', 'article/tables', 'article/figures'])
+TAB.mkdir(parents=True, exist_ok=True); FIG.mkdir(parents=True, exist_ok=True)
 EXPECTED = {'extended': 90, 'compound': 128, 'capacity_stress': 32, 'timing_repairs': 6}
 raw = {p: [json.loads(l) for l in (RES / f'revision_{p}.jsonl').read_text().splitlines()] for p in EXPECTED}
 rows = []
@@ -87,7 +88,7 @@ lines = []
 for (fam,I,T,method),z in extended[extended.budget==20].groupby(['family','I','T','method']):
     good = z[z.feasible]
     lines.append([fam.capitalize(), f'{I}/{T}', method.capitalize(), len(z), int(z.feasible.sum()), int(z.optimal.sum()), med(good.first_seconds), med(100*good.relative_gap, '.1f')])
-table('revision_anytime.tex', ['Family','$I/T$','Method','$n$','Feas.','Opt.','First s','Gap (\%)'], lines, 'lllrrrrr')
+table('revision_anytime.tex', ['Family','$I/T$','Method','$n$','Feas.','Opt.','First s',r'Gap (\%)'], lines, 'lllrrrrr')
 long = extended[(extended.method!='baseline') & (extended.seed==1)]
 lines = []
 long_summary = []
@@ -97,24 +98,25 @@ for (budget,method),z in long.groupby(['budget','method']):
     long_summary.append({'budget':budget,'method':method,'n':len(z),'feasible':int(z.feasible.sum()),'optimal':int(z.optimal.sum()),
                          'median_first_seconds':float(good.first_seconds.median()) if len(good) else None,
                          'median_relative_gap':float(good.relative_gap.median()) if len(good) else None})
-table('revision_budgets.tex',['Budget s','Method','$n$','Feas.','Opt.','First s','Gap (\%)'],lines,'rlrrrrr')
+table('revision_budgets.tex',['Budget s','Method','$n$','Feas.','Opt.','First s',r'Gap (\%)'],lines,'rlrrrrr')
 summary['long_budgets'] = long_summary
 summary['twenty_seconds'] = {method: {'n':len(z),'feasible':int(z.feasible.sum()),'optimal':int(z.optimal.sum()),
     'statuses':dict(z.status.value_counts()),'median_first_seconds':float(z[z.feasible].first_seconds.median()) if z.feasible.any() else None}
     for method,z in extended[extended.budget==20].groupby('method')}
 
-plt.rcParams.update({'font.family':'DejaVu Sans','font.size':9,'axes.spines.top':False,'axes.spines.right':False,'pdf.fonttype':42,'savefig.bbox':'tight'})
+plt.rcParams.update({'font.family':'DejaVu Sans','font.size':8,'axes.titlesize':8,'axes.labelsize':8,'legend.fontsize':6.5,'xtick.labelsize':7,'ytick.labelsize':7,'axes.spines.top':False,'axes.spines.right':False,'pdf.fonttype':42,'savefig.bbox':'tight','savefig.pad_inches':0.02})
 COL = ['#0072B2','#D55E00','#009E73','#CC79A7']
 def save(fig,name):
     fig.savefig(FIG/(name+'.pdf'));fig.savefig(FIG/(name+'.png'),dpi=220);plt.close(fig)
-fig,axes=plt.subplots(1,2,figsize=(7.2,2.6),constrained_layout=True)
+fig,axes=plt.subplots(1,2,figsize=(4.6,2.3),constrained_layout=True)
 for color,method in zip(COL,['cold','warm']):
     z=long[long.method==method].groupby('budget')
-    for ax,field,label in zip(axes,['feasible','optimal'],['Validated incumbent / 6','Closed numerical gap / 6']):
+    for ax,field,label in zip(axes,['feasible','optimal'],['Runs with an explanation (of 6)','Runs with a closed gap (of 6)']):
         counts=z[field].sum();ax.plot(counts.index,counts,marker='o' if method=='cold' else 's',
             linestyle='-' if method=='cold' else '--',markerfacecolor=color if method=='cold' else 'none',color=color,label=method.capitalize())
         ax.set(xlabel='Total budget (seconds)',ylabel=label,xticks=[20,60,120,300],yticks=range(7),ylim=(-.15,6.3))
-        ax.legend(frameon=False,fontsize=8)
+        ax.legend(frameon=False,fontsize=6.5)
+axes[0].set_title('(a)',loc='left');axes[1].set_title('(b)',loc='left')
 save(fig,'anytime_budgets')
 
 compound=df[df.profile=='compound']
@@ -137,7 +139,7 @@ table('revision_compound.tex',['Family','Literals','$K$','Opt.','Inf.','Unres.',
 summary['compound_pairs']={'adjacent_solved_pairs':adjacent_pairs,'strict_cost_decreases':strict_decreases,'largest_positive_increase':largest_increase,
     'physical_statuses_across_attempts':dict(collections.Counter(a['physical_foil_status'] for a in raw['compound'])),
     'common_counts':{'|'.join(map(str,k)):len(v) for k,v in common.items()}}
-fig,axes=plt.subplots(2,2,figsize=(7.2,4.6),constrained_layout=True,gridspec_kw={'height_ratios':[2,1]})
+fig,axes=plt.subplots(2,2,figsize=(4.6,4.0),constrained_layout=True,gridspec_kw={'height_ratios':[2,1]})
 for col,fam in enumerate(['retail','hospital']):
     for color,(marker,style),(nlit,mode) in zip(COL,[('o','-'),('s','--'),('^',':'),('D','-.')],[(2,'weak'),(2,'strong'),(3,'weak'),(3,'strong')]):
         z=compound[(compound.family==fam)&(compound.literals==nlit)&(compound['mode']==mode)]
@@ -147,8 +149,8 @@ for col,fam in enumerate(['retail','hospital']):
             v=paired_z.groupby('K').upper_bound.median();axes[0,col].plot(v.index,v,marker=marker,linestyle=style,color=color,label=label,markerfacecolor=color if mode=='weak' else 'none')
         else: axes[0,col].plot([],[],color=color,linestyle=style,label=label)
         counts=z.groupby('K').optimal.sum();axes[1,col].plot(counts.index,counts,marker=marker,linestyle=style,color=color,markerfacecolor=color if mode=='weak' else 'none')
-    axes[0,col].set(title=fam.capitalize(),ylabel='Paired median explanation cost',xticks=[1,2,3,6]);axes[0,col].legend(fontsize=6,frameon=False)
-    axes[1,col].set(xlabel='Maximum modified periods K',ylabel='Gap closed / 4',xticks=[1,2,3,6],yticks=range(5),ylim=(-.15,4.3))
+    axes[0,col].set(ylabel='Median cost (paired)',xticks=[1,2,3,6]);axes[0,col].set_title(['(a)','(b)'][col],loc='left');axes[1,col].set_title(['(c)','(d)'][col],loc='left');axes[0,col].legend(fontsize=6.5,frameon=False)
+    axes[1,col].set(xlabel='Period budget $K_T$',ylabel='Gap closed / 4',xticks=[1,2,3,6],yticks=range(5),ylim=(-.15,4.3))
 save(fig,'compound_sensitivity')
 
 capacity=[]

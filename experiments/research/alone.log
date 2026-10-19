@@ -1,0 +1,7 @@
+_ZN4llvm12PatternMatch12MaxMin_matchINS_8ICmpInstENS0_14specificval_tyENS0_7bind_tyINS_5ValueEEENS0_12smin_pred_tyELb1EE5matchIS5_EEbPT_ at /Users/madanibezoui/.julia/juliaup/julia-1.11.6+0.aarch64.apple.darwin14/lib/julia/libLLVM.dylib (unknown line)
+unknown function (ip: 0x0)
+Allocations: 14078865 (Pool: 14078412; Big: 453); GC: 13
+G6 T6 2020-10-27 M [(3, 4, 0)] TIME_LIMIT obj=nothing lb=0.6571 it2 1200.1s valid=missing Dict{Symbol, Bool}(:benders => 1, :boundcut => 1, :order => 1, :tightR => 1)
+G6 T6 2020-10-27 FM [(3, 4, 0)] TIME_LIMIT obj=nothing lb=0.8342 it2 1200.6s valid=missing Dict{Symbol, Bool}(:benders => 1, :boundcut => 1, :order => 1, :tightR => 1)
+G10 T12 2020-04-03 M [(1, 10, 0)] TIME_LIMIT obj=nothing lb=2.6562 it2 1200.1s valid=missing Dict{Symbol, Bool}(:benders => 1, :boundcut => 1, :order => 1, :tightR => 1)
+ALONE DONE

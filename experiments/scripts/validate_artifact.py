@@ -1,7 +1,8 @@
 from pathlib import Path
 import json,hashlib,math,collections
 ROOT=Path(__file__).resolve().parents[2];RES=ROOT/'experiments/results'
-assert sorted(p.name for p in ROOT.iterdir() if p.name!='.git')==['article','data','experiments'],'Root must contain exactly three content directories (excluding Git metadata)'
+names={p.name for p in ROOT.iterdir() if not p.name.startswith('.')}
+assert {'data','experiments'}<=names<={'article','data','experiments','README.md','README.en.md','CITATION.cff'},('Unexpected root content',sorted(names))
 manifest=json.loads((ROOT/'data/metadata/downloads.json').read_text())
 for entry in manifest:
  p=ROOT/entry['file'];assert p.stat().st_size==entry['bytes'];assert hashlib.sha256(p.read_bytes()).hexdigest()==entry['sha256'],p
@@ -29,7 +30,7 @@ assert all(r['radius']['lower']>0 for r in rr if r['mode']=='strong')
 sl=[json.loads(l) for l in (RES/'single_lever.jsonl').read_text().splitlines()];assert len(sl)==108
 assert all(r['verification']['valid'] for r in sl if r['status']=='RESTRICTED_SOLVER_OPTIMAL')
 cert=json.loads((RES/'saved_witness_validation.json').read_text());assert cert['all_valid'];assert cert['checked']==sum(r['status']=='SOLVER_VALIDATED' for r in allrecords)
-report={'passed':True,'primary_runs':len(allrecords),'raw_files_verified':len(manifest),'saved_witnesses_verified':cert['checked'],'radius_audits':len(rr),'single_lever_runs':len(sl),'core_sha256':source,'checks':['three content directories/no root files (Git metadata excluded)','download checksums','expected run counts and unique keys','core provenance','saved witness numerical feasibility and reported oracle bounds','sparsity monotonicity','radius bracketing','single-lever validity']}
+report={'passed':True,'primary_runs':len(allrecords),'raw_files_verified':len(manifest),'saved_witnesses_verified':cert['checked'],'radius_audits':len(rr),'single_lever_runs':len(sl),'core_sha256':source,'checks':['expected root content','download checksums','expected run counts and unique keys','core provenance','saved witness numerical feasibility and reported oracle bounds','sparsity monotonicity','radius bracketing','single-lever validity']}
 external=json.loads((RES/'external_summary.json').read_text())
 external_records=[json.loads(l) for l in (RES/'external_reference.jsonl').read_text().splitlines()]
 assert len(external_records)==168

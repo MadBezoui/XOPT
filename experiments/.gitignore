@@ -4,8 +4,10 @@
 /results/pdf_preview/
 /results/pdf_review/
 /results/pdf_review.json
-/research/
 __pycache__/
 *.pyc
 *.aux
 *.log
+!/research/*.log
+/vendor/CE4IO-v1.1.zip
+/vendor/felix-engelhardt-CE4IO-ce443d5/

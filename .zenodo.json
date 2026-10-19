@@ -1,0 +1,20 @@
+{
+  "title": "XOPT v1.0.1: Research Artifact \u2014 Code, Data, and Experiments",
+  "creators": [
+    {
+      "name": "Bezoui, Madani",
+      "affiliation": "CESI LINEACT (UR 7527), Nancy, France"
+    }
+  ],
+  "license": "MIT",
+  "upload_type": "software",
+  "description": "Julia code, data and result records for the article 'Sparse temporal counterfactual explanations for mixed-integer planning: recourse duality, complexity and stability'. The code computes counterfactual explanations by cost constraint generation (CCG), with dual cuts for editable recourse costs, capacity menus, period budgets and a fixed-witness stability radius, and verifies every explanation independently. The artifact holds the records of all studies: the primary study (320 runs), the external comparison (168 runs), Study 1 (256 attempts), Study 2 (1216 records), Study 3 on recourse levers (40 enumeration cases and 210 runs) and Study 4 on unit commitment (140 enumeration cases and 160 runs). The code is under the MIT license and the public input data keep their own licenses (CC BY 4.0 or Open Government Licence).",
+  "keywords": [
+    "counterfactual explanation",
+    "mixed-integer programming",
+    "inverse optimization",
+    "constraint generation",
+    "unit commitment"
+  ],
+  "version": "1.0.1"
+}
