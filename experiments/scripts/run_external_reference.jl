@@ -2,6 +2,8 @@ using JSON3,SHA,Dates,Random,JuMP
 include(joinpath(@__DIR__,"..","src","XOPT.jl"));using .XOPT
 include(joinpath(@__DIR__,"..","src","literature_cg.jl"))
 root=normpath(joinpath(@__DIR__,"..",".."));out=joinpath(root,"experiments/results/external_reference.jsonl")
+# Archived records are reused; set XOPT_RECOMPUTE=1 to recompute them.
+if isfile(out) && filesize(out)>0 && get(ENV,"XOPT_RECOMPUTE","")!="1"; println("Existing records kept: ",out); exit(0); end
 hashes=Dict(name=>bytes2hex(sha256(read(joinpath(root,"experiments/src",name)))) for name in ["XOPT.jl","literature_cg.jl"])
 jobs=Any[]
 for profile in ["main","multifoil"],line in eachline(joinpath(root,"experiments/results/"*profile*".jsonl"))

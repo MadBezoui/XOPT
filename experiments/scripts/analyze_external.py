@@ -35,7 +35,7 @@ for method in ['xopt','literature']:
     summary['methods'][method]={'counts':counts,'median_seconds_all_queries':median}
     lines.append(' & '.join([{'xopt':'Pattern CCG','literature':'Literature CG (reimplementation)'}[method],str(len(rr)),str(counts.get('SOLVER_VALIDATED',0)),str(counts.get('SOLVER_INFEASIBLE',0)),str(sum(n for k,n in counts.items() if k not in ['SOLVER_VALIDATED','SOLVER_INFEASIBLE'])),f'{median:.3f}'])+r' \\')
 (RES/'external_summary.json').write_text(json.dumps(summary,indent=2))
-(ROOT/'article/tables/external_reference.tex').write_text('\\begin{tabular}{lrrrrr}\n\\toprule\nMethod & $n$ & Valid. & Inf. & Unresolved & Median s \\\\\n\\midrule\n'+'\n'.join(lines)+'\n\\bottomrule\n\\end{tabular}\n')
+(ROOT/'article/tables/external_reference.tex').write_text('\\begin{tabular}{lrrrrr}\n\\toprule\nMethod & $n$ & Valid. & Inf. & Unres. & Median s \\\\\n\\midrule\n'+'\n'.join(lines)+'\n\\bottomrule\n\\end{tabular}\n')
 macros={'ExternalPairs':len(pairs),'ExternalJoint':len(errors),'ExternalDisagreements':len(disagreements),
         'ExternalMaxDiff':f'{max(errors,default=0):.2e}'}
 (ROOT/'article/tables/external_numbers.tex').write_text('\n'.join('\\newcommand{\\'+k+'}{'+str(v)+'}' for k,v in macros.items())+'\n')

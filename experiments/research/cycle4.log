@@ -1,0 +1,12 @@
+FW G6 T6 2020-10-27 M [(3, 4, 0)] VALID obj=3.055473561143158 it3 0.8s verified=true
+FW G6 T6 2020-10-27 FM [(3, 4, 0)] VALID obj=2.256146314885377 it5 0.8s verified=true
+FW G6 T6 2020-10-27 M [(4, 2, 1)] VALID obj=0.6517763060509678 it2 0.1s verified=true
+FW G6 T6 2020-10-27 FM [(4, 2, 1)] VALID obj=0.5160200020091288 it2 0.1s verified=true
+FW G10 T12 2020-04-03 M [(1, 10, 0)] WITNESS_INFEASIBLE obj=nothing it2 1.5s verified=missing
+FW G10 T12 2020-04-03 FM [(1, 10, 0)] VALID obj=4.078437812859108 it2 2.1s verified=true
+FW G10 T12 2020-04-03 M [(8, 9, 1)] WITNESS_INFEASIBLE obj=nothing it2 0.3s verified=missing
+FW G10 T12 2020-04-03 FM [(8, 9, 1)] VALID obj=3.763977644507202 it7 3.4s verified=true
+FW G10 T12 2020-07-06 M [(3, 3, 0)] WITNESS_INFEASIBLE obj=nothing it2 0.3s verified=missing
+FW G10 T12 2020-07-06 FM [(3, 3, 0)] WITNESS_INFEASIBLE obj=nothing it2 0.3s verified=missing
+FW G10 T12 2020-07-06 M [(9, 6, 1)] VALID obj=3.3149702831681385 it2 0.5s verified=true
+FW G10 T12 2020-07-06 FM [(9, 6, 1)] VALID obj=1.9250218776540544 it2 0.5s verified=true

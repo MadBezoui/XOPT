@@ -1,0 +1,14 @@
+CYCLE Dict{Symbol, Bool}(:benders => 1, :tightR => 1)
+tiny agree 14/14
+G6 T6 2020-10-27 M [(3, 4, 0)] TIME_LIMIT obj=nothing lb=0.3096 it2 300.0s valid=missing mc=nothing
+G6 T6 2020-10-27 FM [(3, 4, 0)] TIME_LIMIT obj=nothing lb=0.4846 it2 300.0s valid=missing mc=nothing
+G6 T6 2020-10-27 M [(4, 2, 1)] SOLVER_VALIDATED obj=0.6517763060507579 lb=0.6518 it2 105.1s valid=true mc=1
+G6 T6 2020-10-27 FM [(4, 2, 1)] SOLVER_VALIDATED obj=0.5160200020091249 lb=0.516 it2 59.5s valid=true mc=0
+G10 T12 2020-04-03 M [(1, 10, 0)] TIME_LIMIT obj=nothing lb=2.6583 it2 300.0s valid=missing mc=nothing
+G10 T12 2020-04-03 FM [(1, 10, 0)] TIME_LIMIT obj=nothing lb=2.6671 it2 300.0s valid=missing mc=nothing
+G10 T12 2020-04-03 M [(8, 9, 1)] TIME_LIMIT obj=nothing lb=0.5361 it2 300.0s valid=missing mc=nothing
+G10 T12 2020-04-03 FM [(8, 9, 1)] TIME_LIMIT obj=nothing lb=0.5052 it2 300.0s valid=missing mc=nothing
+G10 T12 2020-07-06 M [(3, 3, 0)] TIME_LIMIT obj=nothing lb=1.2579 it2 300.0s valid=missing mc=nothing
+G10 T12 2020-07-06 FM [(3, 3, 0)] TIME_LIMIT obj=nothing lb=1.2662 it2 300.0s valid=missing mc=nothing
+G10 T12 2020-07-06 M [(9, 6, 1)] TIME_LIMIT obj=nothing lb=0.267 it2 300.0s valid=missing mc=nothing
+G10 T12 2020-07-06 FM [(9, 6, 1)] TIME_LIMIT obj=nothing lb=0.2653 it2 300.0s valid=missing mc=nothing

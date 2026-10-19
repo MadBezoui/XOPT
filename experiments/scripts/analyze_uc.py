@@ -14,6 +14,7 @@ plt.rcParams.update({'font.family':'DejaVu Sans','font.size':8,'axes.titlesize':
 
 ROOT = Path(__file__).resolve().parents[2]
 RES, TAB, FIG = (ROOT / p for p in ['experiments/results', 'article/tables', 'article/figures'])
+TAB.mkdir(parents=True, exist_ok=True); FIG.mkdir(parents=True, exist_ok=True)
 FINAL = '--final' in sys.argv
 
 

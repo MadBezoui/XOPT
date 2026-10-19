@@ -1,6 +1,8 @@
 using JSON3
 include(joinpath(@__DIR__,"..","src","XOPT.jl"));using .XOPT
 root=normpath(joinpath(@__DIR__,"..",".."));file=joinpath(root,"experiments/results/single_lever.jsonl")
+# Archived records are reused; set XOPT_RECOMPUTE=1 to recompute them.
+if isfile(file) && filesize(file)>0 && get(ENV,"XOPT_RECOMPUTE","")!="1"; println("Existing records kept: ",file); exit(0); end
 # Exact solution for the restricted one-coordinate problem; not asserted globally optimal.
 open(file,"w") do io
  for profile in ["main","scale","long"],line in eachline(joinpath(root,"experiments/results/"*profile*".jsonl"))

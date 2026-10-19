@@ -10,17 +10,24 @@ for p in [RAW,OUT,META]: p.mkdir(parents=True,exist_ok=True)
 NHS='https://www.england.nhs.uk/statistics/wp-content/uploads/sites/2/'
 files=[('2024-04','2024/11/Monthly-AE-April-2024-revised.csv'),('2024-05','2024/06/Monthly-AE-May-2024.csv'),('2024-06','2024/07/Monthly-AE-June-2024.csv'),('2024-07','2024/11/Monthly-AE-July-2024-revised.csv'),('2024-08','2024/09/Monthly-AE-August-2024.csv'),('2024-09','2024/10/Monthly-AE-September-2024.csv'),('2024-10','2025/05/Monthly-AE-October-2024-revised.csv'),('2024-11','2025/05/Monthly-AE-November-2024-revised.csv'),('2024-12','2025/01/Monthly-AE-December-2024.csv'),('2025-01','2025/02/Monthly-AE-January-2025.csv'),('2025-02','2025/05/Monthly-AE-February-2025-revised.csv'),('2025-03','2025/04/Monthly-AE-March-2025.csv')]
 manifest=[]
+# An archived manifest is verified, never rewritten, so its retrieval dates and checksums stay authoritative.
+ARCHIVED={e['file']:e for e in json.loads((META/'downloads.json').read_text())} if (META/'downloads.json').exists() else {}
 def fetch(url,name,license):
  p=RAW/name
  if not p.exists() or p.stat().st_size==0:
   subprocess.run(['curl','-sS','-L','--fail','--retry','3',url,'-o',str(p)+'.part'],check=True)
   Path(str(p)+'.part').replace(p)
  assert p.stat().st_size>0
- manifest.append(dict(file=str(p.relative_to(ROOT)),url=url,bytes=p.stat().st_size,sha256=hashlib.sha256(p.read_bytes()).hexdigest(),license=license,retrieved_utc=dt.datetime.now(dt.timezone.utc).isoformat()))
+ key=str(p.relative_to(ROOT));digest=hashlib.sha256(p.read_bytes()).hexdigest()
+ if key in ARCHIVED:
+  assert ARCHIVED[key]['sha256']==digest and ARCHIVED[key]['bytes']==p.stat().st_size,('checksum mismatch',key)
+  manifest.append(ARCHIVED[key])
+ else:
+  manifest.append(dict(file=key,url=url,bytes=p.stat().st_size,sha256=digest,license=license,retrieved_utc=dt.datetime.now(dt.timezone.utc).isoformat()))
  return p
 retail=fetch('https://archive.ics.uci.edu/static/public/352/online+retail.zip','online_retail.zip','CC-BY-4.0')
 nhsfiles=[(date,fetch(NHS+url,'nhs_'+date+'.csv','Open Government Licence v3.0')) for date,url in files]
-(META/'downloads.json').write_text(json.dumps(manifest,indent=2))
+if not ARCHIVED: (META/'downloads.json').write_text(json.dumps(manifest,indent=2))
 # Full-year Jan-Nov 2011, complete Monday-Sunday weeks, all countries.
 # Product selection based ONLY on Jan-Mar calibration sales, separate from Apr-Nov test windows.
 weekly=defaultdict(int); totals=Counter(); kept=0; excluded=Counter(); descriptions={}
