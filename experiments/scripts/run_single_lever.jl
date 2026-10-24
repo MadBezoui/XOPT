@@ -1,8 +1,50 @@
+# Resolve the existing ancestor before creating anything, including dangling
+# symlinks. Use the canonical paths for the eventual write as well as the guard.
+function canonical_driver_path(path)
+    candidate = abspath(path)
+    suffix = String[]
+    visited = Set{String}()
+    while !ispath(candidate)
+        candidate in visited && error("Output path contains a symbolic-link cycle")
+        push!(visited, candidate)
+        if islink(candidate)
+            target = readlink(candidate)
+            candidate = abspath(isabspath(target) ? target : joinpath(dirname(candidate), target))
+        else
+            pushfirst!(suffix, basename(candidate))
+            parent = dirname(candidate)
+            parent == candidate && error("Output path has no existing ancestor")
+            candidate = parent
+        end
+    end
+    normpath(joinpath(realpath(candidate), suffix...))
+end
+
+function driver_inside_history(path, history)
+    relative = relpath(path, history)
+    !isabspath(relative) && first(splitpath(relative)) != ".."
+end
+
+root = normpath(joinpath(@__DIR__, "..", ".."))
+history = canonical_driver_path(joinpath(root, "experiments", "results"))
+requested_output = get(ENV, "XOPT_RESULTS_DIR", history)
+recompute = get(ENV, "XOPT_RECOMPUTE", "") == "1"
+recompute && isempty(strip(requested_output)) &&
+    error("Set XOPT_RESULTS_DIR outside historical results before recomputing")
+outputdir = canonical_driver_path(requested_output)
+file = canonical_driver_path(joinpath(outputdir, "single_lever.jsonl"))
+# Never truncate frozen attempts, including relative aliases, descendants and
+# symlinked result files. Check before loading the model or creating directories.
+if recompute && (driver_inside_history(outputdir, history) || driver_inside_history(file, history))
+    error("Set XOPT_RESULTS_DIR outside historical results before recomputing historical attempts")
+end
+if isfile(file) && filesize(file) > 0 && !recompute
+    println("Existing records kept: ", file)
+    exit(0)
+end
+mkpath(outputdir)
 using JSON3
 include(joinpath(@__DIR__,"..","src","XOPT.jl"));using .XOPT
-root=normpath(joinpath(@__DIR__,"..",".."));file=joinpath(root,"experiments/results/single_lever.jsonl")
-# Archived records are reused; set XOPT_RECOMPUTE=1 to recompute them.
-if isfile(file) && filesize(file)>0 && get(ENV,"XOPT_RECOMPUTE","")!="1"; println("Existing records kept: ",file); exit(0); end
 # Exact solution for the restricted one-coordinate problem; not asserted globally optimal.
 open(file,"w") do io
  for profile in ["main","scale","long"],line in eachline(joinpath(root,"experiments/results/"*profile*".jsonl"))

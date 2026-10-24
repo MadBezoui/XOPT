@@ -1,7 +1,7 @@
 using CSV, DataFrames, JSON3, Dates, Random, Statistics, SHA
 include(joinpath(@__DIR__,"..","src","XOPT.jl"));using .XOPT
 const ROOT=normpath(joinpath(@__DIR__,"..",".."))
-const OUT=joinpath(ROOT,"experiments","results")
+const OUT=get(ENV,"XOPT_RESULTS_DIR",joinpath(ROOT,"experiments","results"));mkpath(OUT)
 profile=isempty(ARGS) ? "main" : ARGS[1]
 file=joinpath(OUT,profile*".jsonl")
 # Resume only exact record keys within the same profile and source fingerprint.

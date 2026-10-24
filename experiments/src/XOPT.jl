@@ -70,6 +70,42 @@ function make_instance(id,family,demand;seed=1,capacity_factor=1.4)
     end
     Instance(id,family,d,cap,f,u,h,rho,initial)
 end
+# Shared API assumptions and witness-domain checks. Numerical verification remains Float64.
+function validate_options(o::Options)
+    o.mode in (:weak,:strong) || throw(ArgumentError("mode"))
+    all(isfinite,(o.epsilon,o.margin,o.cost_bound,o.lambda_time,o.lambda_param,o.time_limit,o.tolerance)) || throw(ArgumentError("finite options required"))
+    0<=o.cost_bound<=1 || throw(ArgumentError("cost_bound must be in [0,1]"))
+    o.epsilon>=0 && o.margin>=0 && o.lambda_time>=0 && o.lambda_param>=0 || throw(ArgumentError("negative option"))
+    o.time_limit>=0 && o.tolerance>0 && o.k_time>=0 && o.k_param>=0 && o.max_iterations>=0 || throw(ArgumentError("invalid limit or tolerance"))
+    o.mode==:strong && o.margin<=o.tolerance && throw(ArgumentError("strong margin must exceed tolerance"))
+    nothing
+end
+function array_validation(x,shape;binary=false,tolerance=1e-5)
+    x isa AbstractArray && size(x)==shape || return "array shape"
+    all(v->v isa Real && isfinite(v),x) || return "nonfinite or nonnumeric array"
+    binary && !all(v->min(abs(v),abs(v-1))<=tolerance,x) && return "binary domain"
+    nothing
+end
+invalid_witness(reason)=Dict{String,Any}("valid"=>false,"reason"=>reason,"arithmetic"=>"Float64","exact_certificate"=>false)
+function validate_instance(d::Instance;capacity=d.capacity,foil=nothing)
+    I,T=size(d.demand);I>0 && T>0 || throw(ArgumentError("empty instance"))
+    for (x,shape) in ((d.demand,(I,T)),(d.fixed,(I,T)),(d.unit,(I,T)),(d.holding,(I,T)),(d.initial,(I,)),(d.capacity,(T,)),(capacity,(T,)))
+        isnothing(array_validation(x,shape)) || throw(ArgumentError("instance shape or finite domain"))
+    end
+    d.family in (:retail,:hospital) || throw(ArgumentError("family"))
+    isfinite(d.retention) && 0<d.retention<=1 || throw(ArgumentError("retention"))
+    all(d.fixed.>0) || throw(ArgumentError("positive normalization costs required"))
+    all(minimum(x)>=0 for x in (d.demand,d.unit,d.holding,d.initial,d.capacity,capacity)) || throw(ArgumentError("nonnegative instance data required"))
+    if !isnothing(foil)
+        all(1<=i<=I && 1<=t<=T for (i,t,_) in foil.literals) || throw(ArgumentError("foil coordinate"))
+    end
+    nothing
+end
+# All enumeration stages share this monotonic deadline, including vertex preprocessing.
+struct DeadlineExceeded <: Exception end
+monotonic_time()=time_ns()/1e9
+deadline_after(limit)=monotonic_time()+limit
+check_deadline(deadline)=monotonic_time()>=deadline ? throw(DeadlineExceeded()) : nothing
 function optimizer_model(limit)
     m=Model(HiGHS.Optimizer);set_silent(m)
     set_optimizer_attribute(m,"threads",1)
@@ -160,11 +196,8 @@ function numerical_acceptance(witness, oracle_bound, offset, tolerance)
 end
 function explain(d::Instance,foil::Foil;options=Options(),method=:ccg,capacity=d.capacity,capcost=0.)
     opt=options; t0=time();remaining()=opt.time_limit-(time()-t0)
-    opt.mode in (:weak,:strong) || throw(ArgumentError("mode"))
-    0<=opt.cost_bound<=1 || throw(ArgumentError("cost_bound"))
-    opt.epsilon>=0 && opt.margin>=0 || throw(ArgumentError("epsilon/margin"))
-    opt.mode==:strong && opt.margin<=opt.tolerance && throw(ArgumentError("strong margin must exceed tolerance"))
-    all(d.fixed.>0) || throw(ArgumentError("Positive normalization costs required"))
+    validate_options(opt);validate_instance(d;capacity=capacity,foil=foil)
+    isfinite(capcost) && capcost>=0 || throw(ArgumentError("capacity cost"))
     method in (:ccg,:multicut,:enumerate) || throw(ArgumentError("method"))
     trace=Any[];cuts=0;lb=0.;I,T=size(d.demand);active=Int.(abs.(capacity.-d.capacity).>opt.tolerance)
     stop(status,k=0)=Result(status=status,seconds=time()-t0,iterations=k,cuts=cuts,lower_bound=lb,trace=trace)
@@ -221,8 +254,13 @@ function explain(d::Instance,foil::Foil;options=Options(),method=:ccg,capacity=d
     stop("ITERATION_LIMIT",opt.max_iterations)
 end
 function verify(d,foil,r;options=Options(),capacity=d.capacity)
-    r.status=="SOLVER_VALIDATED" || return Dict("valid"=>false,"reason"=>"not solver-validated")
-    opt=options;I,T=size(d.demand); tol=1e-5
+    opt=options;validate_options(opt);validate_instance(d;capacity=capacity,foil=foil)
+    r.status=="SOLVER_VALIDATED" || return invalid_witness("not solver-validated")
+    I,T=size(d.demand);tol=1e-5
+    for (name,x,binary) in (("y",r.y,true),("q",r.q,false),("state",r.state,false),("delta",r.delta,false))
+        reason=array_validation(x,(I,T);binary=binary,tolerance=tol)
+        isnothing(reason) || return invalid_witness(name*": "*reason)
+    end
     balance=maximum(abs(r.state[i,t]-d.retention*(t==1 ? d.initial[i] : r.state[i,t-1])-r.q[i,t]+(d.family==:retail ? d.demand[i,t] : 0.)) for i in 1:I,t in 1:T)
     physical=balance<=tol && minimum(r.q)>=-tol && minimum(r.state)>=-tol && maximum(vec(sum(r.q,dims=1)).-capacity)<=tol && maximum(r.q.-r.y.*reshape(capacity,1,:))<=tol && matches(r.y,foil)
     physical &= d.family==:retail ? maximum(abs.(r.state[:,end]))<=tol : minimum(r.state.-d.demand)>=-tol
@@ -231,11 +269,16 @@ function verify(d,foil,r;options=Options(),capacity=d.capacity)
     z=forward(d;cost=d.fixed.+r.delta,capacity=capacity,foil=opt.mode==:strong ? foil : nothing,complement=opt.mode==:strong,limit=opt.time_limit)
     witness=sum((d.fixed.+r.delta).*r.y)+sum(d.unit.*r.q)+sum(d.holding.*r.state)
     offset=opt.mode==:strong ? -opt.margin : opt.epsilon
-    bound_ok=(z.status=="INFEASIBLE" && opt.mode==:strong)||(z.status=="OPTIMAL" && numerical_acceptance(witness,z.bound,offset,tol))
-    Dict("valid"=>physical&&actionable&&bound_ok,"arithmetic"=>"Float64","validation_tolerance"=>tol,"exact_certificate"=>false,"physical"=>physical,"actionable"=>actionable,"balance_residual"=>balance,"oracle_status"=>z.status,
+    bound_ok=(z.status=="INFEASIBLE" && opt.mode==:strong)||(z.status=="OPTIMAL" && numerical_acceptance(witness,z.bound,offset,opt.tolerance))
+    Dict("valid"=>physical&&actionable&&bound_ok,"arithmetic"=>"Float64","validation_tolerance"=>tol,"comparison_tolerance"=>opt.tolerance,"exact_certificate"=>false,"physical"=>physical,"actionable"=>actionable,"balance_residual"=>balance,"oracle_status"=>z.status,
         "witness_cost"=>witness,"oracle_bound"=>isfinite(z.bound) ? z.bound : nothing,"gap"=>isfinite(z.bound) ? witness-z.bound : nothing)
 end
 function explain_menu(d,foil,increments;options=Options(),method=:ccg)
+    validate_options(options);validate_instance(d;foil=foil)
+    all(d.capacity.>0) || throw(ArgumentError("positive capacity normalization required"))
+    for inc in increments
+        isnothing(array_validation(inc,size(d.capacity))) && all(d.capacity.+inc.>=0) || throw(ArgumentError("capacity increment"))
+    end
     t0=time(); records=Any[];best=Inf;winner=0;bestresult=nothing;allresolved=true
     order=sortperm([sum(abs.(inc)./d.capacity) for inc in increments])
     for idx in order

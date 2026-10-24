@@ -41,6 +41,31 @@ end
 G_(d)=length(d.pmin);T_(d)=length(d.demand);K_(d,g)=length(d.width[g])
 mref(d)=[minimum(d.marginal[g]) for g in 1:G_(d)]
 
+function validate_uc(d::UCInstance,lev::UCLevers;foil=nothing)
+    G,T=G_(d),T_(d);G>0 && T>0 || throw(ArgumentError("empty UC instance"))
+    isfinite(lev.bound) && 0<=lev.bound<=1 || throw(ArgumentError("lever bound must be in [0,1]"))
+    for name in (:demand,:reserve,:renew)
+        x=getfield(d,name);isnothing(XOPT.array_validation(x,(T,))) && minimum(x)>=0 || throw(ArgumentError("UC time-series domain"))
+    end
+    for name in (:pmin,:pmax,:noload,:startup,:ramp_up,:ramp_down,:su,:sd,:p0)
+        x=getfield(d,name);isnothing(XOPT.array_validation(x,(G,))) && minimum(x)>=0 || throw(ArgumentError("UC unit-data domain"))
+    end
+    length(d.width)==G && length(d.marginal)==G || throw(ArgumentError("UC segment dimensions"))
+    for g=1:G
+        K=K_(d,g);K>0 && isnothing(XOPT.array_validation(d.width[g],(K,))) && minimum(d.width[g])>0 || throw(ArgumentError("UC widths"))
+        isnothing(XOPT.array_validation(d.marginal[g],(K,))) && minimum(d.marginal[g])>0 || throw(ArgumentError("positive marginal normalization required"))
+    end
+    minimum(d.noload)>0 || throw(ArgumentError("positive no-load normalization required"))
+    for name in (:min_up,:min_down,:up0,:down0)
+        x=getfield(d,name);length(x)==G && minimum(x)>=0 || throw(ArgumentError("UC duration domain"))
+    end
+    isnothing(XOPT.array_validation(d.u0,(G,);binary=true,tolerance=0.)) || throw(ArgumentError("UC initial binary state"))
+    all(d.pmax.>=d.pmin) || throw(ArgumentError("UC output bounds"))
+    lev.marginal && d.ramps && throw(ArgumentError("recourse-cost levers require the network dispatch without ramps"))
+    !isnothing(foil) && !all(1<=g<=G && 1<=t<=T for (g,t,_) in foil.literals) && throw(ArgumentError("foil coordinate"))
+    nothing
+end
+
 # Build a reduced instance: units are taken by name and the horizon starts at hour `start`. The
 # system is scaled so that the peak net load (demand minus available renewable output) equals
 # `alpha` times the capacity of the selected units. Demand, renewables and reserves share the factor.
@@ -209,7 +234,7 @@ function uc_master(d,foil,opt,lev,remaining)
     foilcost=@expression(m,activation+recourse)
     nl=d.noload;mr=mref(d)
     @objective(m,Min,sum(af[g,t]/nl[g] for g=1:G,t=1:T)+sum(am[g,t]/mr[g] for g=1:G,t=1:T)+opt.lambda_time*sum(z)+opt.lambda_param*(sum(uf)+sum(um)))
-    (m=m,b=b,delta=delta,zeta=zeta,foilcost=foilcost,duals=duals)
+    (m=m,b=b,delta=delta,zeta=zeta,foilcost=foilcost,duals=duals,levers=lev)
 end
 function competitor_activation(M,d,uk)
     vk,_=transitions(d,uk)
@@ -218,8 +243,12 @@ end
 # Pattern dual cut: exact for every marginal-cost edit, one cut per competitor pattern.
 function uc_dual_cut!(M,d,uk,offset)
     G,T=G_(d),T_(d);m=M.m;r=residual(d,uk)
-    lk=@variable(m,[1:T]);mk=[@variable(m,[1:K_(d,g),1:T],upper_bound=0.) for g in 1:G]
-    nk=@variable(m,[1:T],upper_bound=0.)
+    # Bounded optimal dual representatives avoid unbounded directions that destabilize the MILP.
+    # The constant follows the actual caller's marginal-cost edit bound.
+    cb=uc_dual_bound(d,M.levers).price
+    lk=@variable(m,[1:T],lower_bound=0.,upper_bound=cb)
+    mk=[@variable(m,[1:K_(d,g),1:T],lower_bound=-cb,upper_bound=0.) for g in 1:G]
+    nk=@variable(m,[1:T],lower_bound=-cb,upper_bound=0.)
     for g=1:G,k=1:K_(d,g),t=1:T;@constraint(m,lk[t]+mk[g][k,t]<=d.marginal[g][k]+M.zeta[g,t]);end
     @constraint(m,[t=1:T],lk[t]+nk[t]<=0.)
     rhs=@expression(m,competitor_activation(M,d,uk)+sum(lk[t]*r[t] for t=1:T)+sum(d.width[g][k]*uk[g,t]*mk[g][k,t] for g=1:G for k=1:K_(d,g) for t=1:T)+
@@ -233,7 +262,8 @@ end
 
 function uc_explain(d::UCInstance,foil::Foil;options=Options(),levers=UCLevers(),cuts=:dual)
     opt=options;lev=levers;t0=time();remaining()=opt.time_limit-(time()-t0)
-    opt.mode in (:weak,:strong) || throw(ArgumentError("mode"));cuts in (:dual,:trajectory) || throw(ArgumentError("cuts"))
+    XOPT.validate_options(opt);validate_uc(d,lev;foil=foil)
+    cuts in (:dual,:trajectory) || throw(ArgumentError("cuts"))
     trace=Any[];ncuts=0;lb=0.
     out(status;k=0,extra=Dict{String,Any}())=merge(Dict{String,Any}("status"=>status,"seconds"=>time()-t0,"iterations"=>k,"cuts"=>ncuts,"lower_bound"=>lb,"trace"=>trace),extra)
     remaining()<=0 && return out("TIME_LIMIT")
@@ -273,8 +303,22 @@ end
 # Fresh validation: physical feasibility of the witness, edit bounds and supports, the stored foil
 # cost against a direct recomputation, and a fresh oracle at the edited costs.
 function uc_verify(d::UCInstance,foil::Foil,r;options=Options(),levers=UCLevers())
-    r["status"]=="SOLVER_VALIDATED" || return Dict{String,Any}("valid"=>false,"reason"=>"not validated")
-    opt=options;lev=levers;tol=1e-5;G,T=G_(d),T_(d);u=r["u"];p=r["p"];rv=r["r"];delta=r["delta"];zeta=r["zeta"]
+    opt=options;lev=levers;tol=1e-5;G,T=G_(d),T_(d)
+    XOPT.validate_options(opt);validate_uc(d,lev;foil=foil)
+    get(r,"status",nothing)=="SOLVER_VALIDATED" || return XOPT.invalid_witness("not validated")
+    for name in ("u","delta","zeta","r")
+        shape=name=="r" ? (T,) : (G,T)
+        reason=XOPT.array_validation(get(r,name,nothing),shape;binary=name=="u",tolerance=tol)
+        isnothing(reason) || return XOPT.invalid_witness(name*": "*reason)
+    end
+    p=get(r,"p",nothing)
+    p isa AbstractVector && length(p)==G || return XOPT.invalid_witness("dispatch shape")
+    for g=1:G
+        reason=XOPT.array_validation(p[g],(K_(d,g),T))
+        isnothing(reason) || return XOPT.invalid_witness("dispatch: "*reason)
+    end
+    get(r,"foil_cost",nothing) isa Real && isfinite(r["foil_cost"]) || return XOPT.invalid_witness("finite foil cost required")
+    u=r["u"];rv=r["r"];delta=r["delta"];zeta=r["zeta"]
     chk=uc_forward(d;pattern=u,limit=opt.time_limit)   # pattern-level feasibility of u (min up/down, ramps, reserve)
     v,_=transitions(d,u)
     bal=maximum(abs(sum(p[g][k,t] for g=1:G for k=1:K_(d,g))+rv[t]-residual(d,u)[t]) for t=1:T)
@@ -289,13 +333,14 @@ function uc_verify(d::UCInstance,foil::Foil,r;options=Options(),levers=UCLevers(
     end
     Bf=lev.noload ? opt.cost_bound.*repeat(d.noload,1,T) : zeros(G,T);Bm=lev.marginal ? lev.bound.*repeat(mref(d),1,T) : zeros(G,T)
     changed=(abs.(delta).>opt.tolerance).|(abs.(zeta).>opt.tolerance)
-    actionable=maximum(abs.(delta).-Bf)<=tol && maximum(abs.(zeta).-Bm)<=tol && sum(vec(any(changed,dims=1)))<=opt.k_time && sum(changed)<=opt.k_param
+    actionable=maximum(abs.(delta).-Bf)<=tol && maximum(abs.(zeta).-Bm)<=tol && sum(vec(any(changed,dims=1)))<=opt.k_time && sum(abs.(delta).>opt.tolerance)+sum(abs.(zeta).>opt.tolerance)<=opt.k_param
     witness=sum((d.noload[g]+delta[g,t])*u[g,t]+d.startup[g]*v[g,t] for g=1:G,t=1:T)+dispatch_cost(d,p,zeta)
     z=uc_forward(d;delta=delta,zeta=zeta,foil=opt.mode==:strong ? foil : nothing,complement=opt.mode==:strong,limit=opt.time_limit)
     offset=opt.mode==:strong ? -opt.margin : opt.epsilon
-    ok=(z.status=="INFEASIBLE" && opt.mode==:strong)||(z.status=="OPTIMAL" && XOPT.numerical_acceptance(witness,z.bound,offset,tol))
+    ok=(z.status=="INFEASIBLE" && opt.mode==:strong)||(z.status=="OPTIMAL" && XOPT.numerical_acceptance(witness,z.bound,offset,opt.tolerance))
     kkt=abs(witness-r["foil_cost"])
-    Dict{String,Any}("valid"=>physical&&actionable&&ok&&kkt<=1e-6*max(1,abs(witness)),"physical"=>physical,"actionable"=>actionable,"balance_residual"=>bal,
+    Dict{String,Any}("valid"=>physical&&actionable&&ok&&kkt<=1e-6*max(1,abs(witness)),"arithmetic"=>"Float64","exact_certificate"=>false,"validation_tolerance"=>tol,"comparison_tolerance"=>opt.tolerance,
+        "physical"=>physical,"actionable"=>actionable,"balance_residual"=>bal,
         "oracle_status"=>z.status,"witness_cost"=>witness,"oracle_bound"=>isfinite(z.bound) ? z.bound : nothing,"kkt_gap"=>kkt,
         "gap"=>isfinite(z.bound) ? witness-z.bound : nothing)
 end
@@ -303,11 +348,13 @@ end
 # ---------------- Independent reference for tiny instances (no LP duality, no KKT) ----------------
 # Vertices of the hourly dispatch polytope {0 <= x <= width*u, sum x = r}: every segment at a bound
 # except at most one.
-function uc_vertices(d,col,r;renew=0.,tol=1e-9)
+function uc_vertices(d,col,r;renew=0.,tol=1e-9,deadline=Inf)
+    XOPT.check_deadline(deadline)
     segs=[(g,k) for g in 1:G_(d) if col[g]>.5 for k in 1:K_(d,g)];renew>tol && push!(segs,(0,0));n=length(segs)
     W=[g==0 ? renew : d.width[g][k] for (g,k) in segs]
     out=Vector{Vector{Float64}}()
     for mask in 0:(2^n-1)
+        XOPT.check_deadline(deadline)
         x=[(mask>>(j-1))&1==1 ? W[j] : 0. for j in 1:n];s=sum(x;init=0.)
         cands=abs(s-r)<=tol ? [x] : Vector{Vector{Float64}}()
         for j in 1:n
@@ -321,22 +368,32 @@ function uc_vertices(d,col,r;renew=0.,tol=1e-9)
     full
 end
 function uc_explain_by_enumeration(d::UCInstance,foil::Foil;options=Options(),levers=UCLevers())
+    opt=options;lev=levers;started=XOPT.monotonic_time();deadline=started+opt.time_limit
+    XOPT.validate_options(opt);validate_uc(d,lev;foil=foil)
     d.ramps && throw(ArgumentError("enumeration reference assumes the network dispatch"))
-    opt=options;lev=levers;G,T=G_(d),T_(d);G*T<=12 || throw(ArgumentError("too many binaries"))
-    pats=Matrix{Float64}[]
+    G,T=G_(d),T_(d);G*T<=12 || throw(ArgumentError("too many binaries"))
+    pats=Matrix{Float64}[];comps=Matrix{Float64}[];best=Inf;arg=nothing
+    finish(status,complete=false)=Dict{String,Any}("status"=>status,"objective"=>isfinite(best) ? best : nothing,
+        "upper_bound"=>isfinite(best) ? best : nothing,"lower_bound"=>complete ? (isfinite(best) ? best : nothing) : 0.,
+        "patterns"=>length(pats),"competitors"=>length(comps),"argmin"=>arg,
+        "enumeration_complete"=>complete,"seconds"=>XOPT.monotonic_time()-started)
+    try
+    XOPT.check_deadline(deadline)
     for mask in 0:(2^(G*T)-1)
+        XOPT.check_deadline(deadline)
         u=reshape(Float64.([(mask>>(j-1))&1 for j in 1:G*T]),G,T)
         pattern_feasible(d,u) && push!(pats,u)
     end
     V=Dict{Tuple{Int,Vector{Float64}},Vector{Vector{Vector{Float64}}}}()
-    vert(t,col)=get!(()->uc_vertices(d,col,d.demand[t]-sum(d.pmin[g]*col[g] for g in 1:G);renew=d.renew[t]),V,(t,col))
+    vert(t,col)=get!(()->uc_vertices(d,col,d.demand[t]-sum(d.pmin[g]*col[g] for g in 1:G);renew=d.renew[t],deadline=deadline),V,(t,col))
     offset=opt.mode==:strong ? -opt.margin : opt.epsilon
     comps=[u for u in pats if !(opt.mode==:strong && XOPT.matches(u,foil))]
     Bf=lev.noload ? opt.cost_bound.*repeat(d.noload,1,T) : zeros(G,T);Bm=lev.marginal ? lev.bound.*repeat(mref(d),1,T) : zeros(G,T)
-    nl=d.noload;mr=mref(d);best=Inf;arg=nothing
+    nl=d.noload;mr=mref(d)
     for uh in pats
+        XOPT.check_deadline(deadline)
         XOPT.matches(uh,foil) || continue
-        m=Model(HiGHS.Optimizer);set_silent(m);set_optimizer_attribute(m,"mip_rel_gap",0.);set_optimizer_attribute(m,"threads",1)
+        m=XOPT.optimizer_model(deadline-XOPT.monotonic_time())
         @variable(m,-Bf[g,t]<=de[g=1:G,t=1:T]<=Bf[g,t]);@variable(m,-Bm[g,t]<=ze[g=1:G,t=1:T]<=Bm[g,t])
         @variable(m,a1[1:G,1:T]>=0);@variable(m,a2[1:G,1:T]>=0)
         @constraint(m,a1.>=de);@constraint(m,a1.>=-de);@constraint(m,a2.>=ze);@constraint(m,a2.>=-ze)
@@ -348,11 +405,13 @@ function uc_explain_by_enumeration(d::UCInstance,foil::Foil;options=Options(),le
         # Foil witness: one dispatch vertex per hour, selected by binaries; products are exact.
         hourly=Any[]
         for t=1:T
+            XOPT.check_deadline(deadline)
             vs=vert(t,uh[:,t]);isempty(vs) && (hourly=nothing;break)
             b=@variable(m,[1:length(vs)],Bin);@constraint(m,sum(b)==1)
             U=sum(Bm[g,t]*sum(x[g]) for x in vs for g in 1:G;init=0.)+1.
             e=@variable(m,[1:length(vs)])
             for (j,x) in enumerate(vs)
+                XOPT.check_deadline(deadline)
                 ex=@expression(m,sum(ze[g,t]*sum(x[g]) for g in 1:G))
                 @constraint(m,e[j]<=U*b[j]);@constraint(m,e[j]>=-U*b[j]);@constraint(m,e[j]<=ex+U*(1-b[j]));@constraint(m,e[j]>=ex-U*(1-b[j]))
             end
@@ -369,14 +428,20 @@ function uc_explain_by_enumeration(d::UCInstance,foil::Foil;options=Options(),le
             v
         end
         for uk in comps
+            XOPT.check_deadline(deadline)
             vk,_=transitions(d,uk)
             @constraint(m,fcost<=sum((nl[g]+de[g,t])*uk[g,t]+d.startup[g]*vk[g,t] for g=1:G,t=1:T)+sum(theta(t,uk[:,t]) for t=1:T)+offset)
         end
         @objective(m,Min,sum(a1[g,t]/nl[g] for g=1:G,t=1:T)+sum(a2[g,t]/mr[g] for g=1:G,t=1:T)+opt.lambda_time*sum(z)+opt.lambda_param*sum(s))
-        optimize!(m)
-        if termination_status(m)==MOI.OPTIMAL && objective_value(m)<best;best=objective_value(m);arg=(uh,value.(de),value.(ze));end
+        XOPT.check_deadline(deadline);set_time_limit_sec(m,max(.001,deadline-XOPT.monotonic_time()));optimize!(m)
+        st=termination_status(m)
+        if primal_status(m)==MOI.FEASIBLE_POINT && objective_value(m)<best;best=objective_value(m);arg=(uh,value.(de),value.(ze));end
+        st in (MOI.OPTIMAL,MOI.INFEASIBLE) || return finish(string(st))
     end
-    Dict{String,Any}("status"=>isfinite(best) ? "OPTIMAL" : "INFEASIBLE","objective"=>isfinite(best) ? best : nothing,"patterns"=>length(pats),
-        "competitors"=>length(comps),"argmin"=>arg)
+    finish(isfinite(best) ? "OPTIMAL" : "INFEASIBLE",true)
+    catch err
+        err isa XOPT.DeadlineExceeded || rethrow()
+        finish("TIME_LIMIT")
+    end
 end
 end

@@ -1,11 +1,12 @@
 """All-query comparison with the independently implemented published scheme."""
 from pathlib import Path
+from record_io import read_records
 import json, statistics, collections
 
 ROOT = Path(__file__).resolve().parents[2]
 RES = ROOT / 'experiments/results'
 (ROOT/'article/tables').mkdir(parents=True,exist_ok=True)
-records = [json.loads(s) for s in (RES/'external_reference.jsonl').read_text().splitlines()]
+records = read_records(RES/'external_reference.jsonl', ROOT)
 assert len(records) == 168
 pairs = collections.defaultdict(dict)
 for a in records:

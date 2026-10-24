@@ -12,7 +12,8 @@ the inverse master, cuts, and iteration loop are implemented here separately.
 No call to XOPT.master, XOPT.add_cut!, or XOPT.explain is made.
 """
 function literature_cg(d,foil;options=XOPT.Options())
-    opt=options; start=time(); remaining()=opt.time_limit-(time()-start)
+    opt=options;XOPT.validate_options(opt);XOPT.validate_instance(d;foil=foil)
+    start=time(); remaining()=opt.time_limit-(time()-start)
     I,T=size(d.demand); offset=opt.mode==:strong ? -opt.margin : opt.epsilon
     b=XOPT.physical_model(d;limit=remaining()); m=b.m
     XOPT.add_foil!(m,b.y,foil)

@@ -1,0 +1,228 @@
+{
+  "schema": 1,
+  "snapshot_date": "2026-10-24",
+  "description": "Pre-correction computational sources and immutable historical JSONL identities. Snapshot capture is retrospective and does not establish missing execution-time provenance. Original record fingerprints remain unchanged.",
+  "sources": {
+    "experiments/src/XOPT.jl": "8575aa82dc7dcf11dc6da1e993837fefd3795aa19b35d5b11265070662545fd9",
+    "experiments/src/robustness.jl": "29140edfbb63288e04970ce7dbb9487853585abcf8819045c56926893f3364e8",
+    "experiments/src/audit.jl": "2d71ec91af078e53c2bd73ca84f194e9ff29a25ad885cca8b40ee488129128e4",
+    "experiments/docs/audit_protocol_20261017.md": "b720f3742fdd87b339231e75598e1b5e02275214663c5dd1cb5a770d07e757c9",
+    "experiments/src/anytime.jl": "72c7fa6dcfae939931a572631676fbe7bcc5bb8beea3c755b2b43ff1bf1a4565",
+    "experiments/scripts/run_audit.jl": "96f6b3de09d2731c8f3329920bb07d88f63c8ed2f6e525496afaf10f1b074266",
+    "experiments/scripts/run_uc.jl": "114d91c7ffdb31a01d6b7a605491d20c2c265b5eec7f92b15a3c11843fa64d31",
+    "experiments/src/uc.jl": "05cdcb4ae4bd97907616f603180b82506a3e28680a64e55cf50b1feba92c9d3f",
+    "experiments/data/pglib_uc/SHA256SUMS": "8d954c48c4dfd299d3eb2721ad6b973fc7b1dccc4823903179b92fb114ece8e1",
+    "experiments/docs/uc_protocol_20261017.md": "da72c1ed43e8a9982a5371c282c10c97fa3eba10e54d11ecbe803897afeb408e",
+    "experiments/scripts/run_levers.jl": "3c62bc26158cecc6efde3a303b1297eb4bfe4847767463e30069d8a652a84013",
+    "experiments/src/levers.jl": "20d543f7fbba576044d20986ad829b9d244da1eaa19e57a3915cc6c66b605e21",
+    "experiments/docs/levers_protocol_20261017.md": "23d31089510664ea4438fcde7310966efdaf9c4336cca105eb4df25806449396",
+    "experiments/src/enumerate_levers.jl": "b45f2d83155538523401dd04747682161aaea72c2ebcd1219a6179f605dd4073",
+    "experiments/docs/timing_repair_protocol_20261017.md": "d2e3a9271fcbb5a6c44b2a14f676e172e32a0ce105127f6402e83904fe123d13",
+    "experiments/docs/revision_protocol_20261017.md": "efa92acf11e7d1799189c38740c1f644b1011ab57085821f16bcc0ddd755b7f9",
+    "experiments/scripts/run_timing_repairs.jl": "d91e90b4556f46982cf9025ac451caa5101abd723bbdb15ed85bb964d67d6093",
+    "experiments/scripts/run_revision.jl": "618901ed60d7825f46706140e14a56a1ccc802fd797dd8f89bc51e17472e1fbe",
+    "experiments/src/literature_cg.jl": "6ef1ccfbddf1a3e07585bd384d8ff2eba2144a11ab03b5fab38f948088691fc8",
+    "experiments/src/uc2.jl": "95fc835c9d1db8dfd4015e660718d13c4ab0f12a5ffd9d95f85c39b772e26bd4",
+    "experiments/scripts/run_experiments.jl": "72504800e87507c738d00f940966482fdec1c1c98bdf1175500337c09ca6ba5f",
+    "experiments/scripts/run_robustness.jl": "4d8dccd02e1b75e43eecb960337617ee26d6f7f355fc1385eb3145fb8fd5cc2e",
+    "experiments/scripts/resume_levers_bench.sh": "a6944f7631b8eb2f9396f03787fb3fd213dcfa264c436bed51094d03cacb95af",
+    "experiments/scripts/validate_saved.jl": "f1f5b659d62f5a159cdaf08995260c7c8d614724247381a0b7b4f9bfb3e08b19",
+    "experiments/scripts/analyze_audit.py": "49c29d89b2d7e70bf6778e2b7347e42de1fa4e183bd9999126c08c925323be42",
+    "experiments/scripts/analyze_revision.py": "dc2fd704c352ff263ec17a6bdbdeef49ee509e3c1bca94df0d40913c7eab9f22",
+    "experiments/scripts/prepare_data.py": "ac5349fdacbcd9ae469b66c3d41460e57157461a93224d307ad7ffc6ce465e55",
+    "experiments/scripts/analyze_external.py": "6416eec11cac7ecad0e74254f1b2a12046cb79c33dc47fbb4bf66e2daa9355fb",
+    "experiments/scripts/launch_uc.sh": "68e81ef186729dc3018325a2c030e93a6e372d0a05028c1943020d652c2e4e20",
+    "experiments/scripts/run_external_reference.jl": "ba98d295d29f9e1375ac29f0504b2e4b9fa3e2fa264192a84da81d64c05bd570",
+    "experiments/scripts/validate_artifact.py": "35eb3f1198d101f580e167e884f2d17b07e9d70ff59aba00c1e56fee95313e0d",
+    "experiments/scripts/reproduce.sh": "ef5092d537fc0ed43c906e76e738e3a2ab0eaa0a04f0ca0ddcb1954080b98869",
+    "experiments/scripts/launch_levers.sh": "f56848eef8556c6dc8c5f269b5e59821785b51d44fbae5deb594ca6ec4dcc923",
+    "experiments/scripts/analyze_uc.py": "c3cea795c91ee4d9f61fd25391b31a224cc747904c99fcc94bcb80775b8eb7b0",
+    "experiments/scripts/run_single_lever.jl": "8218383a8244c64c4aa508c3efc3f9dde570d21585a0422247f83c8fedf7c8da",
+    "experiments/scripts/validate_revision.jl": "41f3b0ef89ff9f876d21c80698ec0358f17a5ed3b53b3d2d60e31a776181b8cd",
+    "experiments/scripts/analyze_levers.py": "42750a3eec888541be9eb856e8d04e5884be468e001e555dc8da6f6002f2b977",
+    "experiments/scripts/analyze.py": "22f25f4e13c31ca3e7edd3a42326fdfcf3af2aaeb56f296aaa64649fe9872fd8",
+    "experiments/scripts/launch_audit.sh": "713891367fc847de9a3cb855e1995425827775e129637e67346194139a898057",
+    "experiments/docs/experimental_protocol.md": "8c81995a7e1ff8acd7da742a2c9801623c13e1d408b68428dc7d9a598e9a9f8d",
+    "experiments/docs/revision_results.md": "535689046bdba523b1a2f00b7f50888e08e64f5e714b54acbeca6e464a3f5957",
+    "experiments/docs/research_log.md": "6e066b95401aadbe51c8661ece4ff70a2bfeb4410ba18482510a7ea4fff955b3",
+    "experiments/docs/scientific_audit.md": "d15116d5c7cb3e375bf255afc8bde54195032a522c6b952d2097a372a8391f56",
+    "experiments/docs/code_review.md": "639e60f3f82822bab04a29e9fadc58214ee973dda5c1c5a92761f6ae8dba178d",
+    "experiments/docs/design.md": "897fc75ac4ada2d99fc0f2bff9546e016744c2e7c1388a08cf28d5f61abd3bb6",
+    "experiments/docs/implementation_plan.md": "a81e25437497feb50724dbff8662714e1521c5064eaa24be0ff1c569b29512e5",
+    "experiments/docs/external_comparison.md": "99c9179b12d673f703afc3bf267c618f55ffe62fe00d8ade092a1d6529699e84"
+  },
+  "historical_records": {
+    "experiments/results/audit_sparsity_w3.jsonl": {
+      "sha256": "736cb281882d281c5037a89c34c3dd359c5e7df9c0b7f598bbb42a00a9efbcb1",
+      "records": 200
+    },
+    "experiments/results/long.jsonl": {
+      "sha256": "6726836ce30c5ff1daa8012d31e2db5c41ef3cfe4844074e068158823a87174e",
+      "records": 12
+    },
+    "experiments/results/uc_enum_w1.jsonl": {
+      "sha256": "150d063bd50bf58db1e3b6ffe031b500e1025e3cc7ee1f76674d47593fa8e0dc",
+      "records": 47
+    },
+    "experiments/results/uc_bench_w1.jsonl": {
+      "sha256": "e4b33de8edf18919d8cb2afa5c7968f52163314d7f107317e70b2c76fa9ca5eb",
+      "records": 27
+    },
+    "experiments/results/audit_bound_w1.jsonl": {
+      "sha256": "72f0fffc51c525673f6ce53616f004788febc464ec989dd288a1888bbe4cdce5",
+      "records": 100
+    },
+    "experiments/results/levers_bench_w2.jsonl": {
+      "sha256": "e0c1a8c44277f71d7ccbad92d7c9ffbd6a003c8406b0abbe9bdc7a998adc0abe",
+      "records": 35
+    },
+    "experiments/results/revision_timing_repairs.jsonl": {
+      "sha256": "b2c7f3639d1e48edaedec18757cb61d92351cfb0ad163f487c783a7600948f5f",
+      "records": 6
+    },
+    "experiments/results/uc_enum_w3.jsonl": {
+      "sha256": "24d9221ba81f3c12089172f5ba5e349f23bc05b13c14712e34c4cbc440b0b838",
+      "records": 46
+    },
+    "experiments/results/uc_bench_w3.jsonl": {
+      "sha256": "492a0c9f003a1c8bb1cd057da397bb6db3b782a33980d2b5315f21e13ff6dbe1",
+      "records": 27
+    },
+    "experiments/results/single_lever.jsonl": {
+      "sha256": "378563103f418402f20e1181d95f1b0db02a7f4042e6831997df0c7aea72b703",
+      "records": 108
+    },
+    "experiments/results/audit_sparsity_w1.jsonl": {
+      "sha256": "134a637f2a79a42d351161517e0d7a6b585511d5827d578c65a322b26aad7e52",
+      "records": 200
+    },
+    "experiments/results/levers_bench_w6.jsonl": {
+      "sha256": "7e3b851d7812081ecee6bfd1333d3ffa078fab2d90830e081ab5c90b2264ca54",
+      "records": 35
+    },
+    "experiments/results/levers_bench_w4.jsonl": {
+      "sha256": "daf867a06bde2a2d1981669e7c3eb0e79f8c942dd1ba08a0988dc3b1e8c7c39e",
+      "records": 35
+    },
+    "experiments/results/correctness.jsonl": {
+      "sha256": "71ee9acb73d8b522c3036983650f82c20e6adb8b211bf7e58d4724df1d94f60d",
+      "records": 40
+    },
+    "experiments/results/uc_bench_w5.jsonl": {
+      "sha256": "56dd557afb478daa9ebbf0f56b2bcea523e0dae8434d6e6e5f438c64ce7acab1",
+      "records": 26
+    },
+    "experiments/results/sensitivity.jsonl": {
+      "sha256": "6f513fccf7f8ce427f747d766ecdc5735ca323bc87437d08521ac548c1b46fa0",
+      "records": 72
+    },
+    "experiments/results/levers_bench_w3.jsonl": {
+      "sha256": "a0e196ddf5c161ecc6e8abb2c385967ddf69ddab6ba3805229336b3488dd1ee5",
+      "records": 35
+    },
+    "experiments/results/uc_bench_w2.jsonl": {
+      "sha256": "1c7f7983bb09deaf47739328e267e9234b6c8265c47ce380e23b700b42011eed",
+      "records": 27
+    },
+    "experiments/results/uc_enum_w2.jsonl": {
+      "sha256": "f2c983611036e8d264873b478c5302752ea93dca408538a626e4e34fb68f7504",
+      "records": 47
+    },
+    "experiments/results/multifoil.jsonl": {
+      "sha256": "b0d10d35fc4dbeec72ab7461d7410e73583ac901f30c70995f35e0df8964cf7a",
+      "records": 24
+    },
+    "experiments/results/audit_sparsity_w2.jsonl": {
+      "sha256": "f3616ce192029bdc9f274acc2c153ee258025d5ea17cf49d9b2633a76080416c",
+      "records": 200
+    },
+    "experiments/results/levers_bench_w1.jsonl": {
+      "sha256": "aa7174588d1f6eae75030d1c483e767763892acc0559d0fe2e4336fc24d1df5e",
+      "records": 35
+    },
+    "experiments/results/revision_compound.jsonl": {
+      "sha256": "eb1d97b95e90a2fa6cf4b08de393abbfe08815c131db97d2473d0d8ee2ed9220",
+      "records": 128
+    },
+    "experiments/results/levers_bench_w5.jsonl": {
+      "sha256": "6035193ae4fa42b6d069f710a6939373e6e7c9d85a92929d9cf4735506afb5b3",
+      "records": 35
+    },
+    "experiments/results/uc_bench_w4.jsonl": {
+      "sha256": "ab6c18853375b05e984f32f4246a5176dc8c9065ae87116f1f2c64bc2234deab",
+      "records": 27
+    },
+    "experiments/results/uc_bench_w6.jsonl": {
+      "sha256": "3add429653262a31ccd3a0b665b15457536e76ab8fa4a869d6f461dd79b08e6d",
+      "records": 26
+    },
+    "experiments/results/audit_long_w6.jsonl": {
+      "sha256": "7d5aa0c94686a8b6f1a3080c03fedad8689fd5b0eabb197e5b1b1a9b1d2923e9",
+      "records": 8
+    },
+    "experiments/results/revision_extended.jsonl": {
+      "sha256": "75517ad1dc0141484e6c310117b0037461176a58eebed4db9236a81a8e6da22d",
+      "records": 90
+    },
+    "experiments/results/audit_long_w4.jsonl": {
+      "sha256": "e55b71bf96d3f6805251ec4bbd6ef88c1143c6d2f203196f6e872511ea422b4b",
+      "records": 8
+    },
+    "experiments/results/capacity.jsonl": {
+      "sha256": "7935b7b2865830d8fd395b15e06f29c2c285a9d29e4f20ace52d42466ad02580",
+      "records": 16
+    },
+    "experiments/results/robustness.jsonl": {
+      "sha256": "daca88b018a64f01e125e1e1eff471b884dc8710f269897f3b021e73c2843ae6",
+      "records": 50
+    },
+    "experiments/results/revision_capacity_stress.jsonl": {
+      "sha256": "24e263e13c978f3ba85fe99417b74f11ceac742f13d3606a404266136f6fd07d",
+      "records": 32
+    },
+    "experiments/results/levers_enum_w1.jsonl": {
+      "sha256": "491398c6e90051f23a88a48e90866845053ec12af2a99a14fe42678dbf7b2f9d",
+      "records": 20
+    },
+    "experiments/results/audit_long_w2.jsonl": {
+      "sha256": "9d3e473eab4dfc3a528e8c324725c96af7ae73039cf474f055a89b9f33695b2d",
+      "records": 8
+    },
+    "experiments/results/audit_long_w5.jsonl": {
+      "sha256": "a2e15836e49d28201bacf3851ecb2cf55f2f57ec2f095c851b7db09ee21ce574",
+      "records": 8
+    },
+    "experiments/results/audit_margin_w1.jsonl": {
+      "sha256": "83525e64f7379a8bc4f4e3c60f62fa7602598ca8cd9a9a20cfbf5b417a239ad3",
+      "records": 180
+    },
+    "experiments/results/main.jsonl": {
+      "sha256": "8330baa2ef69341b2699635cac1ebb301ffe830b096e96198bae2a1b7365cdd8",
+      "records": 120
+    },
+    "experiments/results/audit_naive_w1.jsonl": {
+      "sha256": "65ea1d5f3d67a437302e7c009676337d1434143ff95fda811eb4a849358567a8",
+      "records": 288
+    },
+    "experiments/results/audit_long_w3.jsonl": {
+      "sha256": "114f3e67d5e9cebdeaf6faeef41dde8ff14ea20cafcff12f666291d3f92b5df3",
+      "records": 8
+    },
+    "experiments/results/audit_long_w1.jsonl": {
+      "sha256": "e69f5585f8e791dbd74c86c1601945ffc8ee86a4a504e69a016fe289b3f365e4",
+      "records": 8
+    },
+    "experiments/results/levers_enum_w2.jsonl": {
+      "sha256": "9fcbb457fc36a803663bd7e82cb0f6b3be022e43bca5fd9288f1c006f75d7a6a",
+      "records": 20
+    },
+    "experiments/results/scale.jsonl": {
+      "sha256": "1b8b75842a7602acdbc6c477ed731122deb47763de78bf21c6a46335a200e432",
+      "records": 36
+    },
+    "experiments/results/external_reference.jsonl": {
+      "sha256": "f070c4264849d58459def638e316db77b975c93764ca0da1c1dbb27d6968e18c",
+      "records": 168
+    }
+  }
+}

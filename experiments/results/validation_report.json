@@ -1,26 +1,33 @@
 {
   "passed": true,
+  "historical_records": 2668,
   "primary_runs": 320,
-  "raw_files_verified": 13,
-  "saved_witnesses_verified": 258,
-  "radius_audits": 50,
-  "single_lever_runs": 108,
-  "core_sha256": "8575aa82dc7dcf11dc6da1e993837fefd3795aa19b35d5b11265070662545fd9",
-  "checks": [
-    "three content directories/no root files (Git metadata excluded)",
-    "download checksums",
-    "expected run counts and unique keys",
-    "core provenance",
-    "saved witness numerical feasibility and reported oracle bounds",
-    "sparsity monotonicity",
-    "radius bracketing",
-    "single-lever validity",
-    "supplementary counts, source hashes and saved-record digests",
-    "fresh supplementary incumbent checks"
-  ],
   "external_comparison_runs": 168,
-  "supplementary_runs": 250,
   "supplementary_retained_attempts": 256,
-  "supplementary_incumbents_freshly_verified": 182,
-  "arithmetic": "Float64, tolerance-based checks; no exact proof certificates"
+  "study2_records": 1216,
+  "study3_records": 250,
+  "study4_records": 300,
+  "raw_files_verified": 13,
+  "pglib_files_verified": 4,
+  "levers_enumeration": {
+    "cases": 40,
+    "feasible": 22,
+    "all_methods_agree": true
+  },
+  "uc_enumeration": {
+    "cases": 140,
+    "feasible": 110,
+    "all_methods_agree": true
+  },
+  "historical_uc_disagreements_preserved": 1,
+  "uc_corrections": 1,
+  "radius_audits": 50,
+  "fresh_current_validation": {
+    "checks": 1984,
+    "intentionally_invalid_controls": 27,
+    "current_code": true
+  },
+  "source_policy": "Historical hashes verified against preserved original code; current numerical checks bound separately",
+  "arithmetic": "Float64/tolerance-based checks with the same solver; no rational proof certificates",
+  "campaigns_recomputed": false
 }

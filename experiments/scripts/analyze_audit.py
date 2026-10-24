@@ -3,6 +3,8 @@
 Run with --final to enforce the expected attempt counts."""
 from pathlib import Path
 import hashlib
+from provenance import verify_sources
+from record_io import read_records
 import json
 import sys
 import numpy as np
@@ -23,12 +25,11 @@ TOL = 1e-5
 def load(profile):
     out = []
     for f in sorted(RES.glob(f'audit_{profile}_w*.jsonl')):
-        out += [json.loads(l) for l in f.read_text().splitlines() if l.strip()]
+        out += read_records(f, ROOT)
     keys = [a['key'] for a in out]
     assert len(keys) == len(set(keys)), profile
     for a in out:
-        for path, h in a['source_sha256'].items():
-            assert hashlib.sha256((ROOT / path).read_bytes()).hexdigest() == h, (profile, path)
+        verify_sources(ROOT, a['source_sha256'])
     if FINAL and EXPECTED[profile] is not None:
         assert len(out) == EXPECTED[profile], (profile, len(out))
     return out

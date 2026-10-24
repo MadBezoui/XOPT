@@ -1,81 +1,72 @@
-# XOPT — Sparse Temporal Counterfactuals for Mixed-Integer Optimization
+# XOPT — Contrefactuels temporels parcimonieux pour la planification mixte
 
-Ce dépôt contient le code source, les données de référence et les résultats expérimentaux pour le calcul et l'évaluation d'explications contrefactuelles parcimonieuses avec recours continu temporel sous contraintes mixtes en nombres entiers (MILP).
+XOPT étudie les changements de paramètres qui rendent optimale une propriété préférée dans un modèle de planification à activations binaires et recours continu. Il traite les coûts d'activation, certains coûts de recours et un menu fini de capacités, avec des budgets communs sur les paramètres et périodes modifiés.
 
-## Organisation du dépôt
+**Version 1.0.2**, qui intègre les corrections du 24 octobre 2026. Toutes les versions sont archivées sur Zenodo, https://doi.org/10.5281/zenodo.23458561, qui renvoie à la plus récente. La version d'origine [1.0.1, DOI 10.5281/zenodo.23472314](https://doi.org/10.5281/zenodo.23472314) ne contient pas ces corrections. Voir [l'état courant](experiments/docs/current_status.md), [le protocole de correction](experiments/docs/correction_protocol_20261024.md) et [le guide en anglais](README.en.md).
 
-- `experiments/src/` :
-  - `XOPT.jl` : modèles, oracle MILP, algorithme CCG (génération de contraintes de coût, *cost constraint generation*), multicut, énumération exacte, menus de capacité et validation numérique.
-  - `anytime.jl` : initialisation conditionnelle par baseline, conservation des incumbents validés, bornes UB/LB et écarts sous limite de temps.
-  - `robustness.jl` : calcul du rayon de stabilité d'un témoin fixé.
-  - `audit.jl` : calibration de marge, séparation par scénario et borne de coordonnée.
-  - `levers.jl`, `enumerate_levers.jl` : leviers sur les coûts unitaires et de stockage avec coupes duales.
-  - `uc.jl`, `uc2.jl` : modèle d'engagement de centrales (*unit commitment*) sur instances PGLib-UC.
-  - `literature_cg.jl` : réimplémentation comparative indépendante de l'algorithme de génération de contraintes de la littérature.
-- `experiments/scripts/` : scripts d'exécution des expérimentations, d'analyse statistique et de reproduction.
-- `experiments/test/` : bancs de tests unitaires et de validation (Julia et Python).
-- `data/` : données brutes et prétraitées (NHS hospitalier, Online Retail), avec métadonnées de téléchargement et sommes de contrôle SHA-256. Les instances PGLib-UC sont dans `experiments/data/pglib_uc/`.
-- `experiments/results/` : jeux complets de résultats numériques (synthèses CSV et traces détaillées JSONL).
-- [Licence MIT du code](experiments/LICENSE), [périmètre des licences](experiments/LICENSING.md) et [citation](CITATION.cff).
+## Organisation
 
-## Reproduction des résultats
+| Emplacement | Contenu |
+|---|---|
+| `experiments/src/` | Modèles et oracles Julia, CCG, anytime, rayon de stabilité, leviers et engagement de centrales |
+| `experiments/scripts/` | Pilotes, lanceurs à concurrence bornée, analyses et contrôles de reproduction |
+| `experiments/test/` | Huit suites Julia et tests comportementaux Python |
+| `experiments/docs/` | Protocoles datés, addendum de correction et état courant |
+| `experiments/provenance/` | Empreintes historiques et objets de code originaux conservés |
+| `experiments/results/` | Enregistrements historiques et synthèses dérivées |
+| `experiments/results/corrections_20261024/` | Correction UC, recalculs des rayons et validation avec le code corrigé |
+| `data/` | Entrées UCI/NHS et données prétraitées, avec provenance et SHA-256 |
+| `experiments/data/pglib_uc/` | Cas publics d'engagement de centrales PGLib-UC |
 
-### Prérequis
+Le module `uc.jl` est le chemin UC pris en charge ; `uc2.jl` conserve des variantes exploratoires. `literature_cg.jl` est une réimplémentation interne appariée du schéma publié, utilisant les modèles et le solveur du projet ; elle n'est pas une exécution indépendante du logiciel des auteurs.
 
-- Julia 1.11 avec l'environnement verrouillé par `experiments/Manifest.toml`.
-- Python 3.11 avec les dépendances indiquées dans `experiments/requirements.txt`.
-- Le solveur HiGHS (libre et intégré dans l'environnement Julia, aucune licence commerciale requise).
-- Un environnement Python créé dans `.venv` à la racine du dépôt, ou hors du dépôt : le contrôle final (`validate_artifact.py`) refuse tout autre dossier visible à la racine.
+## Environnement
 
-### Lancement de la reproduction
-
-Depuis la racine du dépôt :
+Utiliser Julia 1.11 avec `experiments/Manifest.toml`, et Python 3.11 avec les versions directes fixées dans [requirements.txt](experiments/requirements.txt). HiGHS est installé par l'environnement Julia et ne nécessite pas de licence commerciale. Pour isoler Python :
 
 ```bash
-bash experiments/scripts/reproduce.sh
+python3.11 -m venv .venv
+.venv/bin/python -m pip install -r experiments/requirements.txt
 ```
 
-Les pilotes réutilisent les enregistrements archivés, et le script relance alors surtout les tests et les analyses. Pour recalculer une étude, déplacez d'abord ses enregistrements hors de `experiments/results/`, ou définissez la variable d'environnement `XOPT_RECOMPUTE=1` pour la comparaison externe, les rayons de stabilité de `run_robustness.jl` et la référence à une coordonnée.
+Les commandes suivantes se lancent depuis la racine. `JULIA_BIN` et `PYTHON_BIN` désignent chacun un exécutable, y compris lorsque son chemin contient des espaces. La compilation facultative du manuscrit local exige aussi LaTeX et `latexmk` ; l'artefact de calcul public ne contient pas ses sources éditables.
 
-### Exécution des tests
+## Replay et validation courante
 
 ```bash
-julia --startup-file=no --project=experiments experiments/test/runtests.jl
-julia --startup-file=no --project=experiments experiments/test/robustness.jl
-julia --startup-file=no --project=experiments experiments/test/literature_reference.jl
-julia --startup-file=no --project=experiments experiments/test/anytime.jl
-julia --startup-file=no --project=experiments experiments/test/levers.jl
-julia --startup-file=no --project=experiments experiments/test/uc.jl
+PYTHON_BIN="$PWD/.venv/bin/python" bash experiments/scripts/reproduce.sh --no-pdf
 ```
 
-## Études expérimentales
+Le mode par défaut conserve les 43 fichiers JSONL historiques, soit **2 668 enregistrements**. Il instancie l'environnement, exécute les huit suites Julia et les tests Python, applique la correction UC ciblée et les 50 recalculs de rayon, revérifie les témoins avec le code corrigé, régénère les six analyses et atteint le contrôle global final. Les sorties ciblées UC/rayons peuvent être réutilisées seulement si les empreintes du code, des options et des entrées correspondent. Les contrôles de témoins de `validate_updates.jl` sont une validation courante distincte ; leur effectif et leur verdict sont consignés dans `current_validation.json`.
 
-1. **Benchmark principal et révision anytime** :
-   - 320 calculs principaux et 250 essais de révision temporelle (`experiments/results/all_results.csv`, `experiments/results/revision_results.csv`).
-   - Analyses de sensibilité appariées et classification de capacité.
+Le replay des analyses n'est pas une nouvelle exécution des campagnes. Les objets de `experiments/provenance/objects/` et `frozen_manifest.json` ont été capturés rétrospectivement avant correction : ils lient des octets conservés, sans reconstituer une provenance d'exécution qui manquait aux enregistrements anciens. Les 108 résultats à une coordonnée et les 50 anciens rayons conservent leurs limites de provenance initiales.
 
-2. **Comparaison avec la littérature** :
-   - 84 requêtes appariées (168 calculs) avec le schéma exact publié le plus proche (`experiments/results/external_summary.json`).
+La correction UC garde l'ancienne tentative à 0,252853612595 et enregistre séparément 0,204387890099. L'analyse distingue 139/140 concordances historiques et 140/140 après cette correction identifiée ; elle ne prétend pas à 140 nouveaux calculs. Le recalcul des rayons ne remplace pas `robustness.jsonl`. Une validation de témoin établit son admissibilité et la comparaison de coûts, pas l'optimalité globale de chaque intervention.
 
-3. **Étude 2 — Audit et sensibilité** :
-   - Protocole : `experiments/docs/audit_protocol_20261017.md`
-   - Script : `experiments/scripts/run_audit.jl`
-   - Résultats : `experiments/results/audit_*`
+Sans `--no-pdf`, le script peut aussi compiler le manuscrit lorsque ses sources locales sont disponibles. Un passage des tests ou une compilation ne vaut ni accord de l'auteur, ni attestation éditoriale, ni preuve rationnelle exacte.
 
-4. **Étude 3 — Leviers de coûts** :
-   - Protocole : `experiments/docs/levers_protocol_20261017.md`
-   - Script : `experiments/scripts/run_levers.jl`
-   - Résultats : `experiments/results/levers_*`
+## Relancer séparément les campagnes des pilotes
 
-5. **Étude 4 — Engagement de centrales (Unit Commitment)** :
-   - Protocole : `experiments/docs/uc_protocol_20261017.md`
-   - Script : `experiments/scripts/run_uc.jl`
-   - Données : `experiments/data/pglib_uc/` (provenance dans `PROVENANCE.md`)
-   - Résultats : `experiments/results/uc_*`
+Choisir un **nouveau dossier de résultats**, hors du répertoire historique :
 
-## Interprétation des statuts du solveur
+```bash
+XOPT_RESULTS_DIR=/tmp/xopt-recompute-20261024 XOPT_WORKERS=2 \
+  PYTHON_BIN="$PWD/.venv/bin/python" \
+  bash experiments/scripts/reproduce.sh --recompute --no-pdf
+```
 
-- `SOLVER_VALIDATED` : le problème maître est déclaré optimal par le solveur et la borne inférieure rapportée par l'oracle satisfait la condition de comparaison à la tolérance déclarée. Chaque solution est ensuite vérifiée indépendamment par une résolution de contrôle.
-- `FEASIBLE_TIME_LIMIT`, `FEASIBLE_UNRESOLVED` : une explication admissible a été identifiée dans le temps imparti mais l'optimalité globale n'est pas garantie.
-- `SOLVER_INFEASIBLE` : conclusion d'infaisabilité du solveur dans le domaine autorisé.
-- `TIME_LIMIT` : expiration du budget de calcul avant découverte d'une solution admissible.
+Ce mode relance les campagnes des pilotes et calcule de nouvelles tentatives dans ce dossier distinct. Il ne calcule pas les rayons de nouveaux témoins : les 50 rayons historiques font partie de l’étape ciblée du replay, sur ses témoins d’origine. Le nombre et les statuts des nouvelles tentatives peuvent différer ; aucun total de 2 668 nouveaux enregistrements n’est promis. Il ne faut ni déplacer ni écraser les JSONL historiques, ni substituer les nouveaux résultats aux observations publiées. Les fenêtres de données et requêtes sont conservées selon les protocoles, mais les temps, issues de limites et trajectoires du solveur peuvent changer avec le code, le matériel et la charge. Les campagnes des pilotes peuvent être longues ; leur relance n'est pas nécessaire au replay standard.
+
+`XOPT_WORKERS` est un entier strictement positif, égal à 2 par défaut, qui borne la concurrence des lanceurs. Les identifiants et nombres de shards historiques restent inchangés. Toute erreur d'un enfant produit un code d'échec, y compris lors d'une reprise. Les énumérations corrigées partagent une échéance globale ; historiquement, 41/140 références UC dépassaient les 300 secondes annoncées, avec un maximum de 6 581,36 secondes. Leurs durées sont conservées comme déviation de protocole et ne décrivent pas une comparaison sous délais égaux.
+
+## Portée scientifique et statuts
+
+Les observations UCI/NHS sont réelles ; coûts, capacités et foils de ces modèles sont construits. Le modèle hospitalier utilise des profils de charge, pas des trajectoires de patients. UC est un sous-système redimensionné à un nœud ; les leviers marginaux supposent le dispatch sans rampes. Les 96 calculs marginaux UC non résolus à 300 secondes restent des résultats négatifs.
+
+`SOLVER_VALIDATED` indique une conclusion numérique du maître et une comparaison fondée sur la borne de l'oracle aux tolérances fixées. `FEASIBLE_*` conserve une explication admissible sans optimalité établie. `TIME_LIMIT` est un arrêt de calcul et peut conserver un incumbent lorsqu'il est rapporté ; ce statut ne prouve pas l'infaisabilité. `SOLVER_INFEASIBLE` est la conclusion numérique du solveur. Tous ces contrôles utilisent Float64 ; aucune preuve rationnelle MILP n'est exportée.
+
+Le [positionnement courant](experiments/docs/scientific_positioning_20261024.md) reconnaît l'optimisation inverse partielle antérieure, dont Wang (2013) et Ley–Merkert (2025). Le PDF de Wang fourni par l'utilisateur a été lu intégralement : 16 pages, pagination imprimée 491–506. La comparaison formelle reconnaît sa cible polyédrique plus générale que nos littéraux binaires, ses perturbations des coûts continus et sa combinaison de dualité, complémentarité, séparation et branch-and-bound. Le périmètre étudié ici est la parcimonie temporelle, l'agrégation par motif et les constantes démontrées pour les recours traités, sans revendication de première méthode exacte générale. Aucune réimplémentation de Wang ni mesure de temps appariée n'a été réalisée ; l'appréciation de l'originalité scientifique reste du ressort de l'auteur. Le rapport détaillé local est `article/wang_comparison_20261024/comparison.md` ; le PDF fourni et ce dossier de lecture restent privés, hors des distributions de calcul.
+
+## Licences et distribution
+
+Voir [MIT pour le code](experiments/LICENSE), [le périmètre des licences](experiments/LICENSING.md), [la citation](CITATION.cff) et [la note de livraison](experiments/RELEASE.md). Les données gardent leurs licences propres. Les sources éditables du papier restent locales : LaTeX, bibliographie, modèles, Word et autres sources du manuscrit sont exclues des historiques, branches, tags, releases et archives publiques. Toute distribution publique est construite par liste explicite de fichiers autorisés et inspectée avant envoi. Les corrections présentes ne publient aucun nouvel artefact.

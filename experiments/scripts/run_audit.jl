@@ -6,7 +6,7 @@ include(joinpath(@__DIR__,"..","src","audit.jl"));using .AuditXOPT
 const ROOT=normpath(joinpath(@__DIR__,"..",".."))
 # Usage: julia run_audit.jl <profile> <worker> <workers> [smoke]
 profile=ARGS[1];worker=parse(Int,ARGS[2]);workers=parse(Int,ARGS[3]);smoke=length(ARGS)>3 && ARGS[4]=="smoke"
-dir=joinpath(ROOT,smoke ? "experiments/release" : "experiments/results")
+dir=smoke ? joinpath(ROOT,"experiments/release") : get(ENV,"XOPT_RESULTS_DIR",joinpath(ROOT,"experiments/results"));mkpath(dir)
 file=joinpath(dir,"audit_$(profile)_w$(worker)$(smoke ? "_smoke" : "").jsonl")
 hashes=Dict(p=>bytes2hex(sha256(read(joinpath(ROOT,p)))) for p in ["experiments/src/XOPT.jl","experiments/src/anytime.jl",
   "experiments/src/robustness.jl","experiments/src/audit.jl","experiments/scripts/run_audit.jl","experiments/docs/audit_protocol_20261017.md"])

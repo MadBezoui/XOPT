@@ -3,6 +3,9 @@
 Run with --final to enforce the expected attempt counts."""
 from pathlib import Path
 import hashlib
+from provenance import verify_sources
+from record_io import read_records, apply_uc_correction
+from validate_artifact import validate_enum_cases, validate_success
 import json
 import sys
 import numpy as np
@@ -21,12 +24,11 @@ FINAL = '--final' in sys.argv
 def load(profile, expected=None):
     out = []
     for f in sorted(RES.glob(f'uc_{profile}_w*.jsonl')):
-        out += [json.loads(l) for l in f.read_text().splitlines() if l.strip()]
+        out += read_records(f, ROOT)
     keys = [a['key'] for a in out]
     assert len(keys) == len(set(keys)), profile
     for a in out:
-        for path, h in a['source_sha256'].items():
-            assert hashlib.sha256((ROOT / path).read_bytes()).hexdigest() == h, (profile, path)
+        verify_sources(ROOT, a['source_sha256'])
     if FINAL and expected is not None:
         assert len(out) == expected, (profile, len(out))
     return out
@@ -38,7 +40,14 @@ def med(x, fmt='.2f'):
 
 
 macros = {}
-enum, bench = load('enum'), load('bench', 160)
+enum, bench = load('enum', 140), load('bench', 160)
+historical_dual_agree = sum(a['enumeration']['status']=='INFEASIBLE' and a['dual']['status']=='SOLVER_INFEASIBLE' or a['enumeration']['status']=='OPTIMAL' and a['dual']['status']=='SOLVER_VALIDATED' and abs(a['enumeration']['objective']-a['dual']['objective'])<=1e-6 for a in enum)
+enum = apply_uc_correction(enum, ROOT)
+validate_enum_cases(enum, 'UC corrected', 140)
+macros.update(UCEnumHistoricalDualAgree=historical_dual_agree, UCEnumCorrections=1)
+for a in bench:
+    if a['result']['status']=='SOLVER_VALIDATED':
+        validate_success(a['result'], a.get('verification'), a['key'])
 
 # Correctness against enumeration of commitments and dispatch vertices.
 rows = []
