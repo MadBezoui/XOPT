@@ -5,12 +5,7 @@ export anytime_explain, anytime_menu, coordinate_baseline, with_options, validat
 
 with_options(o;kwargs...) = Options(;merge((; (k=>getfield(o,k) for k in fieldnames(Options))...), (;kwargs...))...)
 finite(x)=isfinite(x) ? x : nothing
-function check_options(o)
-    o.mode in (:weak,:strong) || throw(ArgumentError("mode"))
-    0<=o.cost_bound<=1 || throw(ArgumentError("cost_bound"))
-    o.epsilon>=0 && o.margin>=0 && o.lambda_time>=0 && o.lambda_param>=0 || throw(ArgumentError("negative parameter"))
-    o.mode==:strong && o.margin<=o.tolerance && throw(ArgumentError("margin must exceed tolerance"))
-end
+check_options(o)=XOPT.validate_options(o)
 function intervention_cost(d,r,o,capacity,capcost)
     changed=abs.(r.delta).>o.tolerance
     active=abs.(capacity.-d.capacity).>o.tolerance
@@ -21,10 +16,12 @@ end
 # The original verifier's status gate is adapted internally: it tests explanation
 # feasibility, not global optimality. Public output distinguishes these concepts.
 function validate_incumbent(d,foil,r,o;capacity=d.capacity,limit=o.time_limit)
+    XOPT.validate_options(o)
     limit<=0 && return Dict{String,Any}("valid"=>false,"reason"=>"validation deadline")
     adapter=Result(status="SOLVER_VALIDATED",delta=r.delta,y=r.y,q=r.q,state=r.state)
     v=XOPT.verify(d,foil,adapter;options=with_options(o;time_limit=limit),capacity=capacity)
     offset=o.mode==:strong ? -o.margin : o.epsilon
+    get(v,"valid",false) || return v
     strict=(o.mode==:strong && get(v,"oracle_status","")=="INFEASIBLE") ||
         (!isnothing(get(v,"oracle_bound",nothing)) && XOPT.numerical_acceptance(v["witness_cost"],v["oracle_bound"],offset,o.tolerance))
     v["valid"] &= strict
@@ -32,7 +29,8 @@ function validate_incumbent(d,foil,r,o;capacity=d.capacity,limit=o.time_limit)
     v
 end
 function coordinate_baseline(d,foil;options=Options(),capacity=d.capacity,capcost=0.)
-    o=options;check_options(o);start=time();remaining()=o.time_limit-(time()-start)
+    isfinite(capcost) && capcost>=0 || throw(ArgumentError("nonnegative finite capacity cost required"))
+    o=options;check_options(o);XOPT.validate_instance(d;capacity=capacity,foil=foil);start=time();remaining()=o.time_limit-(time()-start)
     fail(s)= (status=s,result=nothing,verification=nothing,seconds=time()-start)
     length(foil.literals)==1 || return fail("NOT_APPLICABLE")
     remaining()>0 || return fail("TIME_LIMIT")
@@ -67,7 +65,8 @@ function seed_master!(M,r,o,capacity,d)
 end
 function anytime_explain(d,foil;options=Options(),initialize=true,baseline_only=false,
                          capacity=d.capacity,capcost=0.,seed=nothing)
-    o=options;check_options(o);all(d.fixed.>0)||throw(ArgumentError("positive scales"))
+    o=options;check_options(o);XOPT.validate_instance(d;capacity=capacity,foil=foil)
+    isfinite(capcost) && capcost>=0 || throw(ArgumentError("capacity cost"))
     start=time();remaining()=o.time_limit-(time()-start)
     active=Int.(abs.(capacity.-d.capacity).>o.tolerance)
     lb=capcost+o.lambda_time*sum(active)+o.lambda_param*sum(active)
@@ -160,7 +159,12 @@ function from_dict(r)
     Result(status="FEASIBLE_VALIDATED",objective=r["objective"],delta=r["delta"],y=r["y"],q=r["q"],state=r["state"])
 end
 function anytime_menu(d,foil,increments;options=Options())
-    o=options;check_options(o);start=time();remaining()=o.time_limit-(time()-start)
+    o=options;check_options(o);XOPT.validate_instance(d;foil=foil)
+    all(d.capacity.>0) || throw(ArgumentError("positive capacity normalization required"))
+    for inc in increments
+        isnothing(XOPT.array_validation(inc,size(d.capacity))) && all(d.capacity.+inc.>=0) || throw(ArgumentError("capacity increment"))
+    end
+    start=time();remaining()=o.time_limit-(time()-start)
     n=length(increments);n>0||throw(ArgumentError("empty menu"))
     costs=[sum(abs.(inc)./d.capacity) for inc in increments]
     lbs=[costs[j]+(o.lambda_time+o.lambda_param)*sum(abs.(increments[j]).>o.tolerance) for j in 1:n]

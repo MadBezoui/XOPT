@@ -7,7 +7,10 @@ export naive_explain, coordinate_lower_bound, foil_bounds
 # separated in the nominal region. This mirrors reusing a nominal competitor pool and
 # is used only to measure what scenario-specific separation prevents.
 function naive_explain(d::Instance,foil::Foil;options=Options(),capacity=d.capacity,capcost=0.,oracle_capacity=d.capacity)
-    opt=options;t0=time();remaining()=opt.time_limit-(time()-t0)
+    opt=options;XOPT.validate_options(opt);XOPT.validate_instance(d;capacity=capacity,foil=foil)
+    XOPT.validate_instance(d;capacity=oracle_capacity)
+    isfinite(capcost) && capcost>=0 || throw(ArgumentError("capacity cost"))
+    t0=time();remaining()=opt.time_limit-(time()-t0)
     active=Int.(abs.(capacity.-d.capacity).>opt.tolerance);cuts=0;lb=0.
     stop(status,k=0)=Result(status=status,seconds=time()-t0,iterations=k,cuts=cuts,lower_bound=lb)
     remaining()<=0 && return stop("TIME_LIMIT")

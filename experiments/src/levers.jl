@@ -14,6 +14,13 @@ Base.@kwdef struct Levers
     bound::Float64=.8          # relative bound for continuous cost edits
 end
 
+function validate_levers(d::Instance,lev::Levers;capacity=d.capacity,foil=nothing)
+    XOPT.validate_instance(d;capacity=capacity,foil=foil)
+    isfinite(lev.bound) && 0<=lev.bound<=1 || throw(ArgumentError("lever bound must be in [0,1]"))
+    d.family==:retail && all(d.initial.==0) && d.retention==1. || throw(ArgumentError("retail network with zero initial inventory required"))
+    nothing
+end
+
 edited_instance(d::Instance,zp,zh)=Instance(d.id,d.family,d.demand,d.capacity,d.fixed,d.unit.+zp,d.holding.+zh,d.retention,d.initial)
 
 # Lemma (min-cost-flow recourse): with nonnegative costs at most cmax, there are optimal duals with
@@ -95,7 +102,7 @@ end
 
 function explain_levers(d::Instance,foil::Foil;options=Options(),levers=Levers(),cuts=:dual,capacity=d.capacity)
     opt=options;lev=levers;t0=time();remaining()=opt.time_limit-(time()-t0)
-    opt.mode in (:weak,:strong) || throw(ArgumentError("mode"))
+    XOPT.validate_options(opt);validate_levers(d,lev;capacity=capacity,foil=foil)
     cuts in (:dual,:trajectory) || throw(ArgumentError("cuts"))
     I,T=size(d.demand);trace=Any[];ncuts=0;lb=0.
     out(status;k=0,extra=Dict{String,Any}())=merge(Dict{String,Any}("status"=>status,"seconds"=>time()-t0,"iterations"=>k,"cuts"=>ncuts,
@@ -136,16 +143,30 @@ end
 
 # Fresh validation: witness feasibility, edit bounds, supports, KKT consistency and a fresh oracle.
 function verify_levers(d,foil,r;options=Options(),levers=Levers(),capacity=d.capacity)
-    r["status"]=="SOLVER_VALIDATED" || return Dict{String,Any}("valid"=>false,"reason"=>"not validated")
     opt=options;lev=levers;tol=1e-5;I,T=size(d.demand)
-    rs=XOPT.Result(status="SOLVER_VALIDATED",delta=r["delta"],y=r["y"],q=r["q"],state=r["state"])
-    de=edited_instance(d,r["zp"],r["zh"])
-    v=XOPT.verify(de,foil,rs;options=opt,capacity=capacity)
+    XOPT.validate_options(opt);validate_levers(d,lev;capacity=capacity,foil=foil)
+    get(r,"status",nothing)=="SOLVER_VALIDATED" || return XOPT.invalid_witness("not validated")
+    for name in ("delta","zp","zh","y","q","state")
+        reason=XOPT.array_validation(get(r,name,nothing),(I,T);binary=name=="y",tolerance=tol)
+        isnothing(reason) || return XOPT.invalid_witness(name*": "*reason)
+    end
+    get(r,"foil_cost",nothing) isa Real && isfinite(r["foil_cost"]) || return XOPT.invalid_witness("finite foil cost required")
     zp,zh=r["zp"],r["zh"]
     bounds=maximum(abs.(zp).-(lev.unit ? lev.bound : 0.).*d.unit)<=tol && maximum(abs.(zh).-(lev.holding ? lev.bound : 0.).*d.holding)<=tol &&
         maximum(abs.(zh[:,T]))<=tol && (lev.fixed || maximum(abs.(r["delta"]))<=tol)
-    changed=(abs.(r["delta"]).>opt.tolerance).|(abs.(zp).>opt.tolerance).|(abs.(zh).>opt.tolerance)
-    support=sum(vec(any(changed,dims=1)))<=opt.k_time && sum(changed)<=opt.k_param
+    bounds || return XOPT.invalid_witness("lever bounds")
+    # A negative edited recourse coefficient can only be roundoff within the bound tolerance.
+    all(d.unit.+zp.>=0) && all(d.holding.+zh.>=0) || return XOPT.invalid_witness("nonnegative edited costs required")
+    rs=XOPT.Result(status="SOLVER_VALIDATED",delta=r["delta"],y=r["y"],q=r["q"],state=r["state"])
+    de=edited_instance(d,r["zp"],r["zh"])
+    v=XOPT.verify(de,foil,rs;options=opt,capacity=capacity)
+    get(v,"valid",false) || return v
+    cf=abs.(r["delta"]).>opt.tolerance;cp=abs.(zp).>opt.tolerance;ch=abs.(zh).>opt.tolerance
+    changed=cf.|cp.|ch;active=abs.(capacity.-d.capacity).>opt.tolerance
+    periods=sum(vec(any(changed,dims=1)).|active)
+    parameters=sum(cf)+sum(cp)+sum(ch)+sum(active)
+    support=periods<=opt.k_time && parameters<=opt.k_param
+    v["changed_periods"]=periods;v["changed_parameters"]=parameters
     witness=v["witness_cost"]
     v["kkt_gap"]=abs(witness-r["foil_cost"])
     v["lever_bounds"]=bounds;v["lever_support"]=support

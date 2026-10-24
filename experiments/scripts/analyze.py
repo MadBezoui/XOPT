@@ -1,5 +1,6 @@
 """Deterministic tables and vector figures from retained JSONL observations."""
 from pathlib import Path
+from record_io import read_records, current_radii
 import json, collections, hashlib, sys
 import numpy as np
 import pandas as pd
@@ -12,7 +13,7 @@ FIG.mkdir(parents=True,exist_ok=True);TAB.mkdir(parents=True,exist_ok=True)
 plt.rcParams.update({'font.family':'DejaVu Sans','font.size':8,'axes.titlesize':8,'axes.labelsize':8,'legend.fontsize':6.5,'xtick.labelsize':7,'ytick.labelsize':7,'axes.spines.top':False,'axes.spines.right':False,'pdf.fonttype':42,'savefig.bbox':'tight','savefig.pad_inches':0.02})
 COL=['#0072B2','#D55E00','#009E73','#CC79A7']
 profiles=['correctness','main','sensitivity','scale','capacity','long','multifoil']
-raw={p:[json.loads(l) for l in (RES/(p+'.jsonl')).read_text().splitlines()] for p in profiles if (RES/(p+'.jsonl')).exists()}
+raw={p:read_records(RES/(p+'.jsonl'), ROOT) for p in profiles if (RES/(p+'.jsonl')).exists()}
 rows=[]
 for p,records in raw.items():
  for a in records:
@@ -119,7 +120,7 @@ for k,(title,body) in enumerate(texts):
  if k<2:ax.annotate('',xy=(x+3.3,1),xytext=(x+2.95,1),arrowprops={'arrowstyle':'->','color':'#333333'})
 save(fig,'graphical_abstract')
 if (RES/'robustness.jsonl').exists():
- rr=[json.loads(l) for l in (RES/'robustness.jsonl').read_text().splitlines()];z=pd.DataFrame([{'mode':a['mode'],'family':a['family'],**a['radius']} for a in rr]);z.to_csv(RES/'robustness.csv',index=False)
+ rr=current_radii(ROOT);z=pd.DataFrame([{'mode':a['mode'],'family':a['family'],**a['radius']} for a in rr]);z.to_csv(RES/'robustness.csv',index=False)
  fig,axes=plt.subplots(1,2,figsize=(4.6,2.3),constrained_layout=True)
  for ax,fam,letter in zip(axes,['retail','hospital'],['(a)','(b)']):
   for i,mode in enumerate(['weak','strong']):

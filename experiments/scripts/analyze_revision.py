@@ -2,6 +2,8 @@
 from pathlib import Path
 import collections
 import hashlib
+from provenance import verify_sources
+from record_io import read_records
 import json
 import numpy as np
 import pandas as pd
@@ -13,14 +15,13 @@ ROOT = Path(__file__).resolve().parents[2]
 RES, TAB, FIG = (ROOT / p for p in ['experiments/results', 'article/tables', 'article/figures'])
 TAB.mkdir(parents=True, exist_ok=True); FIG.mkdir(parents=True, exist_ok=True)
 EXPECTED = {'extended': 90, 'compound': 128, 'capacity_stress': 32, 'timing_repairs': 6}
-raw = {p: [json.loads(l) for l in (RES / f'revision_{p}.jsonl').read_text().splitlines()] for p in EXPECTED}
+raw = {p: read_records(RES / f'revision_{p}.jsonl', ROOT) for p in EXPECTED}
 rows = []
 for profile, records in raw.items():
     assert len(records) == EXPECTED[profile], (profile, len(records))
     assert len({a['key'] for a in records}) == len(records)
     for a in records:
-        for path, expected in a['source_sha256'].items():
-            assert hashlib.sha256((ROOT / path).read_bytes()).hexdigest() == expected, path
+        verify_sources(ROOT, a['source_sha256'])
         o = a.get('output', {})
         ub, lb = o.get('upper_bound'), o.get('lower_bound')
         feasible = ub is not None

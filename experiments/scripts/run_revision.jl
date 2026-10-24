@@ -4,7 +4,8 @@ include(joinpath(@__DIR__,"..","src","anytime.jl"));using .AnytimeXOPT
 const ROOT=normpath(joinpath(@__DIR__,"..",".."))
 profile=isempty(ARGS) ? "extended" : ARGS[1]
 smoke=length(ARGS)>1 && ARGS[2]=="smoke"
-file=joinpath(ROOT,smoke ? "experiments/release/revision_smoke_$(profile).jsonl" : "experiments/results/revision_$(profile).jsonl")
+outputdir=get(ENV,"XOPT_RESULTS_DIR",joinpath(ROOT,"experiments/results"));mkpath(outputdir)
+file=smoke ? joinpath(ROOT,"experiments/release/revision_smoke_$(profile).jsonl") : joinpath(outputdir,"revision_$(profile).jsonl")
 hashes=Dict(p=>bytes2hex(sha256(read(joinpath(ROOT,p)))) for p in ["experiments/src/XOPT.jl","experiments/src/anytime.jl","experiments/scripts/run_revision.jl","experiments/docs/revision_protocol_20261017.md"])
 seen=Set{String}()
 if isfile(file)

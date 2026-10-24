@@ -5,7 +5,7 @@ const ROOT=normpath(joinpath(@__DIR__,"..",".."))
 const DATA=joinpath(ROOT,"experiments/data/pglib_uc")
 # Usage: julia run_uc.jl <enum|bench> <worker> <workers> [smoke]
 profile=ARGS[1];worker=parse(Int,ARGS[2]);workers=parse(Int,ARGS[3]);smoke=length(ARGS)>3 && ARGS[4]=="smoke"
-dir=joinpath(ROOT,smoke ? "experiments/release" : "experiments/results")
+dir=smoke ? joinpath(ROOT,"experiments/release") : get(ENV,"XOPT_RESULTS_DIR",joinpath(ROOT,"experiments/results"));mkpath(dir)
 file=joinpath(dir,"uc_$(profile)_w$(worker)$(smoke ? "_smoke" : "").jsonl")
 hashes=Dict(p=>bytes2hex(sha256(read(joinpath(ROOT,p)))) for p in ["experiments/src/XOPT.jl","experiments/src/uc.jl",
   "experiments/scripts/run_uc.jl","experiments/docs/uc_protocol_20261017.md","experiments/data/pglib_uc/SHA256SUMS"])

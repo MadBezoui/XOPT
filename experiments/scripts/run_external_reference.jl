@@ -1,9 +1,51 @@
+# Resolve the existing ancestor before creating anything, including dangling
+# symlinks. Use the canonical paths for the eventual write as well as the guard.
+function canonical_driver_path(path)
+    candidate = abspath(path)
+    suffix = String[]
+    visited = Set{String}()
+    while !ispath(candidate)
+        candidate in visited && error("Output path contains a symbolic-link cycle")
+        push!(visited, candidate)
+        if islink(candidate)
+            target = readlink(candidate)
+            candidate = abspath(isabspath(target) ? target : joinpath(dirname(candidate), target))
+        else
+            pushfirst!(suffix, basename(candidate))
+            parent = dirname(candidate)
+            parent == candidate && error("Output path has no existing ancestor")
+            candidate = parent
+        end
+    end
+    normpath(joinpath(realpath(candidate), suffix...))
+end
+
+function driver_inside_history(path, history)
+    relative = relpath(path, history)
+    !isabspath(relative) && first(splitpath(relative)) != ".."
+end
+
+root = normpath(joinpath(@__DIR__, "..", ".."))
+history = canonical_driver_path(joinpath(root, "experiments", "results"))
+requested_output = get(ENV, "XOPT_RESULTS_DIR", history)
+recompute = get(ENV, "XOPT_RECOMPUTE", "") == "1"
+recompute && isempty(strip(requested_output)) &&
+    error("Set XOPT_RESULTS_DIR outside historical results before recomputing")
+outputdir = canonical_driver_path(requested_output)
+out = canonical_driver_path(joinpath(outputdir, "external_reference.jsonl"))
+# Never truncate frozen attempts, including relative aliases, descendants and
+# symlinked result files. Check before loading the model or creating directories.
+if recompute && (driver_inside_history(outputdir, history) || driver_inside_history(out, history))
+    error("Set XOPT_RESULTS_DIR outside historical results before recomputing historical attempts")
+end
+if isfile(out) && filesize(out) > 0 && !recompute
+    println("Existing records kept: ", out)
+    exit(0)
+end
+mkpath(outputdir)
 using JSON3,SHA,Dates,Random,JuMP
 include(joinpath(@__DIR__,"..","src","XOPT.jl"));using .XOPT
 include(joinpath(@__DIR__,"..","src","literature_cg.jl"))
-root=normpath(joinpath(@__DIR__,"..",".."));out=joinpath(root,"experiments/results/external_reference.jsonl")
-# Archived records are reused; set XOPT_RECOMPUTE=1 to recompute them.
-if isfile(out) && filesize(out)>0 && get(ENV,"XOPT_RECOMPUTE","")!="1"; println("Existing records kept: ",out); exit(0); end
 hashes=Dict(name=>bytes2hex(sha256(read(joinpath(root,"experiments/src",name)))) for name in ["XOPT.jl","literature_cg.jl"])
 jobs=Any[]
 for profile in ["main","multifoil"],line in eachline(joinpath(root,"experiments/results/"*profile*".jsonl"))
