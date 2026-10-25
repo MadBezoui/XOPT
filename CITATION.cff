@@ -12,8 +12,9 @@ repository-code: "https://github.com/MadBezoui/XOPT"
 url: "https://github.com/MadBezoui/XOPT/releases/tag/v1.0.2"
 license: MIT
 abstract: >-
-  Julia implementation, datasets, and numerical experiments for sparse temporal
-  counterfactual explanations in mixed-integer planning with continuous recourse.
+  Julia implementation, datasets, and numerical experiments accompanying the
+  paper "Constraint generation for temporal counterfactuals in mixed-integer
+  planning".
 
 references:
   - type: software
