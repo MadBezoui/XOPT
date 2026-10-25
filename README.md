@@ -1,4 +1,4 @@
-# XOPT — Contrefactuels temporels parcimonieux pour la planification mixte
+# XOPT : génération de contraintes pour les contrefactuels temporels en planification mixte en nombres entiers
 
 XOPT étudie les changements de paramètres qui rendent optimale une propriété préférée dans un modèle de planification à activations binaires et recours continu. Il traite les coûts d'activation, certains coûts de recours et un menu fini de capacités, avec des budgets communs sur les paramètres et périodes modifiés.
 

@@ -1,4 +1,4 @@
-# XOPT: sparse temporal counterfactual explanations for mixed-integer planning
+# XOPT: constraint generation for temporal counterfactuals in mixed-integer planning
 
 XOPT studies bounded parameter changes that make a preferred property optimal in plans with binary activations and continuous recourse. Cost levers and a finite capacity menu share period and parameter budgets.
 
