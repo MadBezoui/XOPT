@@ -51,5 +51,23 @@ class ReproduceSafetyTests(unittest.TestCase):
             self.assertIn('empty', result.stderr)
             self.assertEqual(marker.read_text(), 'original\n')
 
+    def test_replay_fails_before_solver_when_published_evidence_is_invalid(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp)
+            marker = path/'julia_called'
+            julia = path/'julia'
+            julia.write_text('#!/bin/sh\ntouch "' + str(marker) + '"\nexit 0\n')
+            julia.chmod(0o755)
+            python = path/'python'
+            python.write_text('#!/bin/sh\necho gate-rejected >&2\nexit 1\n')
+            python.chmod(0o755)
+            env = os.environ.copy()
+            env.update(JULIA_BIN=str(julia), PYTHON_BIN=str(python))
+            result = subprocess.run(['bash', str(SCRIPT), '--no-pdf'], env=env,
+                                    capture_output=True, text=True, timeout=10)
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn('gate-rejected', result.stderr)
+            self.assertFalse(marker.exists(), 'replay must check saved evidence before solver execution')
+
 if __name__ == '__main__':
     unittest.main()

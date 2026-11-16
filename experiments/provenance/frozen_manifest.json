@@ -44,11 +44,6 @@
     "experiments/scripts/launch_audit.sh": "713891367fc847de9a3cb855e1995425827775e129637e67346194139a898057",
     "experiments/docs/experimental_protocol.md": "8c81995a7e1ff8acd7da742a2c9801623c13e1d408b68428dc7d9a598e9a9f8d",
     "experiments/docs/revision_results.md": "535689046bdba523b1a2f00b7f50888e08e64f5e714b54acbeca6e464a3f5957",
-    "experiments/docs/research_log.md": "6e066b95401aadbe51c8661ece4ff70a2bfeb4410ba18482510a7ea4fff955b3",
-    "experiments/docs/scientific_audit.md": "d15116d5c7cb3e375bf255afc8bde54195032a522c6b952d2097a372a8391f56",
-    "experiments/docs/code_review.md": "639e60f3f82822bab04a29e9fadc58214ee973dda5c1c5a92761f6ae8dba178d",
-    "experiments/docs/design.md": "897fc75ac4ada2d99fc0f2bff9546e016744c2e7c1388a08cf28d5f61abd3bb6",
-    "experiments/docs/implementation_plan.md": "a81e25437497feb50724dbff8662714e1521c5064eaa24be0ff1c569b29512e5",
     "experiments/docs/external_comparison.md": "99c9179b12d673f703afc3bf267c618f55ffe62fe00d8ade092a1d6529699e84"
   },
   "historical_records": {
@@ -224,5 +219,10 @@
       "sha256": "f070c4264849d58459def638e316db77b975c93764ca0da1c1dbb27d6968e18c",
       "records": 168
     }
+  },
+  "projection": {
+    "original_frozen_manifest_sha256": "db837fb4ac60863e12e8e59d0d472e5db99f9da5ba6b06660093cdd75560f646",
+    "omitted_private_source_count": 5,
+    "scope": "Public projection; the unmodified complete retrospective manifest stays local. Historical records and their cited source identities are unchanged."
   }
 }

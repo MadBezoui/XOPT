@@ -5,7 +5,9 @@ include(joinpath(@__DIR__,"..","src","levers.jl"));using .LeverXOPT
 include(joinpath(@__DIR__,"..","src","uc.jl"));using .UCX
 const ROOT=normpath(joinpath(@__DIR__,"..",".."))
 const RES=joinpath(ROOT,"experiments/results")
-const OUT=joinpath(RES,"corrections_20261024")
+const OUT=joinpath(RES,"corrections_20261028")
+const REPORT=joinpath(OUT,"current_validation.json")
+ispath(REPORT) && error("Refusing to overwrite an existing current-validation record: $REPORT")
 digest(p)=bytes2hex(sha256(read(p)))
 rows(file)=[JSON3.read(line,Dict{String,Any}) for line in eachline(file) if !isempty(strip(line))]
 const FILES=Dict(basename(p)=>rows(p) for p in sort(readdir(RES;join=true)) if endswith(p,".jsonl"))
@@ -111,12 +113,12 @@ for file in sort(collect(keys(FILES)))
 end
 paths=["experiments/src/XOPT.jl","experiments/src/levers.jl","experiments/src/uc.jl","experiments/scripts/validate_updates.jl","experiments/docs/correction_protocol_20261024.md"]
 inputs=Dict("experiments/results/"*file=>digest(joinpath(RES,file)) for file in keys(FILES))
-for name in ("uc_correction.json","robustness_revalidated.jsonl");inputs["experiments/results/corrections_20261024/"*name]=digest(joinpath(OUT,name));end
+for name in ("uc_correction.json","robustness_revalidated.jsonl");inputs["experiments/results/corrections_20261028/"*name]=digest(joinpath(OUT,name));end
 report=Dict("source_sha256"=>Dict(p=>digest(joinpath(ROOT,p)) for p in paths),"input_sha256"=>inputs,"checks"=>CHECKS,
     "all_passed"=>all(c["passed"] for c in CHECKS),"recorded_utc"=>string(now(UTC)),"julia"=>string(VERSION),
     "scope"=>"Fresh Float64 witness admissibility and direct intervention-cost checks with the same models/solver; not a proof of intervention optimality")
-path=joinpath(OUT,"current_validation.json");temp=path*".part"
+path=REPORT;temp=path*".part"
 open(temp,"w") do io;JSON3.write(io,report);write(io,'\n');end
-mv(temp,path;force=true)
+mv(temp,path;force=false)
 report["all_passed"]||error("Current witness validation failed; inspect current_validation.json")
 println("Validated ",length(CHECKS)," current witnesses/negative controls")

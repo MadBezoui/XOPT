@@ -3,6 +3,22 @@ include(joinpath(@__DIR__,"..","src","XOPT.jl"));using .XOPT
 include(joinpath(@__DIR__,"..","src","uc.jl"));using .UCX
 const ROOT=normpath(joinpath(@__DIR__,"..",".."))
 const DATA=joinpath(ROOT,"experiments/data/pglib_uc")
+const DAYS=["2020-01-27","2020-04-03","2020-07-06","2020-10-27"]
+# Bind and verify the exact four PGLib inputs before loading any model or resuming.
+expected=Dict{String,String}()
+for line in eachline(joinpath(DATA,"SHA256SUMS"))
+ fields=split(strip(line));length(fields)==2 || error("Invalid PGLib checksums file")
+ digest,name=fields
+ occursin(r"^[0-9a-f]{64}$",digest) && name in ("rts_".*DAYS.*".json") && !haskey(expected,name) || error("Invalid PGLib checksums entry")
+ expected[name]=digest
+end
+Set(keys(expected))==Set("rts_".*DAYS.*".json") || error("Incomplete PGLib checksums file")
+inputhashes=Dict{String,String}()
+for (name,digest) in expected
+ observed=bytes2hex(sha256(read(joinpath(DATA,name))))
+ observed==digest || error("PGLib input checksum mismatch: $name")
+ inputhashes["experiments/data/pglib_uc/"*name]=observed
+end
 # Usage: julia run_uc.jl <enum|bench> <worker> <workers> [smoke]
 profile=ARGS[1];worker=parse(Int,ARGS[2]);workers=parse(Int,ARGS[3]);smoke=length(ARGS)>3 && ARGS[4]=="smoke"
 dir=smoke ? joinpath(ROOT,"experiments/release") : get(ENV,"XOPT_RESULTS_DIR",joinpath(ROOT,"experiments/results"));mkpath(dir)
@@ -13,17 +29,17 @@ seen=Set{String}()
 if isfile(file)
  for line in eachline(file)
   a=JSON3.read(line);Dict(String(k)=>String(v) for (k,v) in pairs(a.source_sha256))==hashes || error("Source changed; archive previous UC records before resuming")
+  hasproperty(a,:input_sha256) && Dict(String(k)=>String(v) for (k,v) in pairs(a.input_sha256))==inputhashes || error("Input changed; archive previous UC records before resuming")
   push!(seen,String(a.key))
  end
 end
 function write_record(key,a)
- a["key"]=key;a["profile"]=profile;a["worker"]=worker;a["source_sha256"]=hashes;a["recorded_utc"]=string(now(UTC));a["julia"]=string(VERSION)
+ a["key"]=key;a["profile"]=profile;a["worker"]=worker;a["source_sha256"]=hashes;a["input_sha256"]=inputhashes;a["recorded_utc"]=string(now(UTC));a["julia"]=string(VERSION)
  open(file,"a") do io;JSON3.write(io,a);write(io,'\n');flush(io);end
  push!(seen,key);println(key," => ",get(a,"status","recorded"));flush(stdout)
 end
 mine(jobs)=[j for (n,j) in enumerate(jobs) if mod(n-1,workers)==worker-1]
 summ(r)=Dict{String,Any}(k=>v for (k,v) in r if k!="trace")
-const DAYS=["2020-01-27","2020-04-03","2020-07-06","2020-10-27"]
 # Ten units: two combined cycles, three steam units and five combustion turbines of different cost.
 const UNITS=["107_CC_1","213_CC_3","101_STEAM_3","115_STEAM_3","202_STEAM_4","113_CT_1","123_CT_1","207_CT_1","301_CT_3","322_CT_5"]
 # Tiny correctness cases: three small turbines with secant cost curves, and two units with their full curves.

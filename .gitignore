@@ -2,6 +2,19 @@
 /article/
 /FuturWork/
 /MPC_Guidlines.md
+/experiments/research/
+/experiments/docs/author_signoff.md
+/experiments/docs/correction_plan_20261024.md
+/experiments/docs/research_log.md
+/experiments/docs/implementation_plan.md
+/experiments/docs/scientific_audit.md
+/experiments/docs/code_review.md
+/experiments/docs/design.md
+/experiments/provenance/objects/6e066b95401aadbe51c8661ece4ff70a2bfeb4410ba18482510a7ea4fff955b3
+/experiments/provenance/objects/a81e25437497feb50724dbff8662714e1521c5064eaa24be0ff1c569b29512e5
+/experiments/provenance/objects/d15116d5c7cb3e375bf255afc8bde54195032a522c6b952d2097a372a8391f56
+/experiments/provenance/objects/639e60f3f82822bab04a29e9fadc58214ee973dda5c1c5a92761f6ae8dba178d
+/experiments/provenance/objects/897fc75ac4ada2d99fc0f2bff9546e016744c2e7c1388a08cf28d5f61abd3bb6
 
 # Editable manuscript, bibliography, template and figure sources, anywhere.
 *.tex

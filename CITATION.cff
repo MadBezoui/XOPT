@@ -1,15 +1,14 @@
 cff-version: 1.2.0
 message: "If you use this software or data, please cite it as below."
 type: software
-title: "XOPT v1.0.2: Research Artifact — Code, Data, and Experiments"
+title: "XOPT v1.0.3: Research Artifact — Code, Data, and Experiments"
 authors:
   - family-names: "Bezoui"
     given-names: "Madani"
-version: "1.0.2"
+version: "1.0.3"
 doi: "10.5281/zenodo.23458561"
-date-released: "2026-10-24"
 repository-code: "https://github.com/MadBezoui/XOPT"
-url: "https://github.com/MadBezoui/XOPT/releases/tag/v1.0.2"
+url: "https://github.com/MadBezoui/XOPT/releases/tag/v1.0.3"
 license: MIT
 abstract: >-
   Julia implementation, datasets, and numerical experiments accompanying the
@@ -17,6 +16,13 @@ abstract: >-
   planning".
 
 references:
+  - type: software
+    title: "XOPT v1.0.2: historical published research artifact"
+    authors:
+      - family-names: "Bezoui"
+        given-names: "Madani"
+    version: "1.0.2"
+    doi: "10.5281/zenodo.23627564"
   - type: software
     title: "XOPT v1.0.1: original research artifact"
     authors:

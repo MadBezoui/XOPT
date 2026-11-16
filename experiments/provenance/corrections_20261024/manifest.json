@@ -1,0 +1,18 @@
+{
+  "description": "Retrospective preservation of the exact sources and three correction outputs dated 2026-10-24; byte identity is not proof of execution-time capture or mathematical exactness.",
+  "sources": {
+    "experiments/docs/correction_protocol_20261024.md": "60c442998cca4b6c6a12971c84bce40383d09439d00432e4b2edc3b554a0818c",
+    "experiments/scripts/run_corrections.jl": "fc3f65f5227fab0c937a5e1f50edb15158c0dc96a3552b4bc9448e3cfef536c4",
+    "experiments/scripts/run_robustness.jl": "1bc5a4e7c7945b69c4d20626fce457054f36ed86a2e556b6543e64e5d1d68b6a",
+    "experiments/scripts/validate_updates.jl": "1d58639592589109026cd7ea790ee949a300b972ac566430cc79422564ba4c40",
+    "experiments/src/XOPT.jl": "f607a71f0f2bb756362f1375308d5508606773579f5978eeba90dc575aa0fa95",
+    "experiments/src/levers.jl": "c62d81aab57e21df3d6c451e286e9b4cbe7293ab703ae4e972646627b01b9834",
+    "experiments/src/robustness.jl": "29140edfbb63288e04970ce7dbb9487853585abcf8819045c56926893f3364e8",
+    "experiments/src/uc.jl": "c97885e13c3ff0e1aead5e1caaf990ac3c91f5ef70789c26257efaa4f7bf17dc"
+  },
+  "records": {
+    "experiments/results/corrections_20261024/uc_correction.json": "705816494095c56b56f0e444503f1aa5cdf08b4f7ce0fa9d573671708b76e8ee",
+    "experiments/results/corrections_20261024/robustness_revalidated.jsonl": "f083d267cc1e7ec8c1b75af655815981419de1811a5a081322f7ca9e250fb64c",
+    "experiments/results/corrections_20261024/current_validation.json": "734afdbf09733efeaa86eac50c6d423f470c866f502d14a0081e2c85422b4dc2"
+  }
+}

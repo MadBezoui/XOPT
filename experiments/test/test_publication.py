@@ -108,6 +108,65 @@ class PublicationTests(unittest.TestCase):
                 self.manifest["files"] = [name]
                 self.assert_rejected(self.validate(), "forbidden")
 
+    def test_internal_editorial_and_exploratory_files_are_forbidden_even_if_listed(self):
+        for name in ("experiments/docs/author_signoff.md",
+                     "experiments/docs/correction_plan_20261024.md",
+                     "experiments/docs/research_log.md",
+                     "experiments/docs/implementation_plan.md",
+                     "experiments/docs/scientific_audit.md",
+                     "experiments/docs/code_review.md",
+                     "experiments/docs/design.md",
+                     "experiments/results/resources_20261017.json",
+                     "experiments/results/levers_logs/bench_w1.log",
+                     "experiments/research/cycle_test.jl"):
+            with self.subTest(name=name):
+                self.put(name, "local internal material")
+                self.manifest["files"] = [name]
+                self.assert_rejected(self.validate(), "forbidden")
+
+    def test_personal_filesystem_paths_in_file_content_are_rejected(self):
+        name = "experiments/results/sanitized.log"
+        for directory in ("Users", "home"):
+            with self.subTest(directory=directory):
+                self.put(name, "Trace: /" + directory + "/alice/project/file\n")
+                self.manifest["files"] = [name]
+                self.assert_rejected(self.validate(), "personal filesystem path")
+
+    def test_git_history_rejects_internal_editorial_and_exploratory_files(self):
+        self.init_git()
+        name = "experiments/docs/author_signoff.md"
+        self.put(name, "local author confirmations")
+        self.git("add", name)
+        self.git("commit", "-qm", "Internal material")
+        self.git("rm", "-q", name)
+        self.git("commit", "-qm", "Removing the file does not purge history")
+        self.assert_rejected(self.validate("--check-git-history"), "forbidden")
+
+    def test_public_snapshot_projects_frozen_manifest_and_keeps_private_original(self):
+        public = b"module Historical\nend\n"
+        private = b"internal editorial history\n"
+        good_hash = hashlib.sha256(public).hexdigest()
+        private_hash = hashlib.sha256(private).hexdigest()
+        good_name = "experiments/provenance/objects/" + good_hash
+        bad_name = "experiments/provenance/objects/" + private_hash
+        self.put(good_name, public)
+        self.put(bad_name, private)
+        frozen_name = "experiments/provenance/frozen_manifest.json"
+        frozen = {"schema": 1, "sources": {"experiments/src/model.jl": good_hash,
+                    "experiments/docs/research_log.md": private_hash}, "historical_records": {}}
+        original = json.dumps(frozen)
+        self.put(frozen_name, original)
+        self.manifest["files"] = ["experiments/src/model.jl", frozen_name, good_name]
+        self.save_manifest()
+        result = self.run_script("prepare_public_snapshot.py", "--output", self.root.parent / (self.root.name + "-public"))
+        self.assertEqual(result.returncode, 0, result.stderr)
+        output = self.root.parent / (self.root.name + "-public")
+        self.addCleanup(lambda: __import__("shutil").rmtree(output, ignore_errors=True))
+        projected = json.loads((output / frozen_name).read_text())
+        self.assertEqual(projected["sources"], {"experiments/src/model.jl": good_hash})
+        self.assertEqual((self.root / frozen_name).read_text(), original)
+        self.assertFalse((output / bad_name).exists())
+
     def test_renamed_document_source_is_rejected_by_content(self):
         for content in ("\\documentclass{article}\n\\begin{document}",
                         "\\begin{tabular}{ll}\nprivate & paper\n\\end{tabular}",
@@ -211,6 +270,33 @@ class PublicationTests(unittest.TestCase):
         self.git("tag", "private-snapshot")
         self.git("checkout", "-q", "--detach", clean)
         self.assert_rejected(self.validate("--check-git-history"), "forbidden")
+
+    def test_correction_snapshot_objects_require_safe_mapping_and_hash(self):
+        payload = b"module HistoricCorrection\nend\n"
+        digest = hashlib.sha256(payload).hexdigest()
+        prefix = "experiments/provenance/corrections_20261024/"
+        name = prefix + "objects/" + digest
+        manifest = prefix + "manifest.json"
+        self.put(name, payload)
+        self.put(manifest, json.dumps({"sources": {"experiments/src/model.jl": digest}}))
+        self.manifest["files"] = [name, manifest]
+        self.assertEqual(self.validate().returncode, 0)
+        self.put(name, b"altered")
+        self.assert_rejected(self.validate(), "hash")
+        self.put(name, payload)
+        self.put(manifest, json.dumps({"sources": {"experiments/docs/author_signoff.md": digest}}))
+        self.assert_rejected(self.validate(), "forbidden")
+        self.put(manifest, json.dumps({"sources": {}}))
+        self.assert_rejected(self.validate(), "unmapped")
+
+    def test_git_correction_snapshot_requires_original_mapping(self):
+        self.init_git()
+        payload = b"module HistoricCorrection\nend\n"
+        name = "experiments/provenance/corrections_20261024/objects/" + hashlib.sha256(payload).hexdigest()
+        self.put(name, payload)
+        self.git("add", name)
+        self.git("commit", "-qm", "Unmapped correction object")
+        self.assert_rejected(self.validate("--check-git-history"), "unmapped")
 
     def test_git_checks_history_after_manuscript_is_deleted(self):
         self.init_git()

@@ -6,6 +6,7 @@ const ROOT=normpath(joinpath(@__DIR__,"..",".."))
 # Usage: julia run_levers.jl <enum|bench> <worker> <workers> [smoke]
 profile=ARGS[1];worker=parse(Int,ARGS[2]);workers=parse(Int,ARGS[3]);smoke=length(ARGS)>3 && ARGS[4]=="smoke"
 dir=smoke ? joinpath(ROOT,"experiments/release") : get(ENV,"XOPT_RESULTS_DIR",joinpath(ROOT,"experiments/results"));mkpath(dir)
+inputdir=get(ENV,"XOPT_RESULTS_DIR",joinpath(ROOT,"experiments/results"));input_hashes=Dict{String,String}()
 file=joinpath(dir,"levers_$(profile)_w$(worker)$(smoke ? "_smoke" : "").jsonl")
 hashes=Dict(p=>bytes2hex(sha256(read(joinpath(ROOT,p)))) for p in ["experiments/src/XOPT.jl","experiments/src/levers.jl",
   "experiments/src/enumerate_levers.jl","experiments/scripts/run_levers.jl","experiments/docs/levers_protocol_20261017.md"])
@@ -18,6 +19,7 @@ if isfile(file)
 end
 function write_record(key,a)
  a["key"]=key;a["profile"]=profile;a["worker"]=worker;a["source_sha256"]=hashes;a["recorded_utc"]=string(now(UTC));a["julia"]=string(VERSION)
+ a["input_file_sha256"]=copy(input_hashes);a["input_origin"]=haskey(ENV,"XOPT_RESULTS_DIR") ? "new_campaign" : "historical"
  open(file,"a") do io;JSON3.write(io,a);write(io,'\n');flush(io);end
  push!(seen,key);println(key," => ",get(a,"status","recorded"));flush(stdout)
 end
@@ -27,7 +29,10 @@ function restore(m)
 end
 meta(d)=Dict("id"=>d.id,"family"=>String(d.family),"I"=>size(d.demand,1),"T"=>size(d.demand,2),"demand"=>d.demand,"capacity"=>d.capacity,
   "fixed"=>d.fixed,"unit"=>d.unit,"holding"=>d.holding,"retention"=>d.retention,"initial"=>d.initial)
-records(p)=[JSON3.read(l) for l in eachline(joinpath(ROOT,"experiments/results/$p.jsonl"))]
+function records(p)
+ path=joinpath(inputdir,"$p.jsonl");input_hashes[p*".jsonl"]=bytes2hex(sha256(read(path)))
+ [JSON3.read(l) for l in eachline(path)]
+end
 mine(jobs)=[j for (n,j) in enumerate(jobs) if mod(n-1,workers)==worker-1]
 const LEVERS=Dict("F"=>Levers(fixed=true),"PH"=>Levers(fixed=false,unit=true,holding=true),"FPH"=>Levers(fixed=true,unit=true,holding=true))
 summ(r)=Dict{String,Any}(k=>v for (k,v) in r if k!="trace")
