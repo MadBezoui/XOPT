@@ -4,12 +4,20 @@ const ROOT=normpath(joinpath(@__DIR__,"..",".."))
 const OUT=get(ENV,"XOPT_RESULTS_DIR",joinpath(ROOT,"experiments","results"));mkpath(OUT)
 profile=isempty(ARGS) ? "main" : ARGS[1]
 file=joinpath(OUT,profile*".jsonl")
-# Resume only exact record keys within the same profile and source fingerprint.
-sourcehash=bytes2hex(sha256(read(joinpath(ROOT,"experiments/src/XOPT.jl"))))
+# New records bind the producing driver, model, and the processed data actually read.
+# Historical records are not rewritten; a legacy output cannot be resumed in place.
+sourcehash=Dict(p=>bytes2hex(sha256(read(joinpath(ROOT,p)))) for p in
+    ["experiments/src/XOPT.jl", "experiments/scripts/run_experiments.jl"])
+inputhash=Dict(p=>bytes2hex(sha256(read(joinpath(ROOT,p)))) for p in
+    ["data/processed/retail_weekly.csv", "data/processed/nhs_monthly.csv"])
 seen=Set{String}()
 if isfile(file)
     for l in eachline(file)
-        obj=JSON3.read(l); obj.source_sha256==sourcehash || error("Source changed; archive existing $file before rerun")
+        obj=JSON3.read(l)
+        hasproperty(obj,:source_sha256) && obj.source_sha256 isa JSON3.Object &&
+            Dict(String(k)=>String(v) for (k,v) in pairs(obj.source_sha256))==sourcehash || error("Source changed; archive existing $file before rerun")
+        hasproperty(obj,:input_sha256) && obj.input_sha256 isa JSON3.Object &&
+            Dict(String(k)=>String(v) for (k,v) in pairs(obj.input_sha256))==inputhash || error("Input changed; archive existing $file before rerun")
         push!(seen,String(obj.key))
     end
 end
@@ -31,7 +39,7 @@ function instance(family,I,T,seed)
     x,meta
 end
 function store!(key,record)
-    record["key"]=key;record["source_sha256"]=sourcehash;record["profile"]=profile;record["recorded_utc"]=string(now(UTC));record["julia"]=string(VERSION)
+    record["key"]=key;record["source_sha256"]=sourcehash;record["input_sha256"]=inputhash;record["profile"]=profile;record["recorded_utc"]=string(now(UTC));record["julia"]=string(VERSION)
     open(file,"a") do io;JSON3.write(io,record);write(io,'\n');flush(io);end
     push!(seen,key)
 end

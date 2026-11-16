@@ -1,5 +1,5 @@
 {
-  "title": "XOPT v1.0.2: Research Artifact — Code, Data, and Experiments",
+  "title": "XOPT v1.0.3: Research Artifact — Code, Data, and Experiments",
   "creators": [
     {
       "name": "Bezoui, Madani",
@@ -8,7 +8,7 @@
   ],
   "license": "MIT",
   "upload_type": "software",
-  "description": "Correction release of XOPT 1.0.1. Preserves all 2668 original attempts and their original computational code; adds an explicitly bound correction of one UC false-optimality result, fully bound current radius calculations and fresh numerical witness checks, corrected validators, enumeration deadlines and allowlisted computational packaging. Version 1.0.1 (DOI 10.5281/zenodo.23472314) remains available as the original archive. Original code is MIT; public data retain their own licenses. Editable manuscript sources are excluded.",
+  "description": "Correction release of XOPT 1.0.2. Preserves all 2668 original attempts, the original computational code and the 24 October 2026 correction records together with the protocol that produced them; adds a separately identified UC correction, fixed-witness radius checks, current numerical witness checks and reconstructed witnesses for the 94 historical single-coordinate interventions, dated 28 October 2026. Internal documents present in versions up to 1.0.2 are excluded. Versions 1.0.1 (DOI 10.5281/zenodo.23472314) and 1.0.2 (DOI 10.5281/zenodo.23627564) remain available. Original code is MIT; public data retain their own licenses. Editable manuscript sources are excluded.",
   "keywords": [
     "counterfactual explanation",
     "mixed-integer programming",
@@ -16,5 +16,5 @@
     "constraint generation",
     "unit commitment"
   ],
-  "version": "1.0.2"
+  "version": "1.0.3"
 }

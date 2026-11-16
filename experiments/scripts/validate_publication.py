@@ -15,6 +15,10 @@ import zipfile
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_MANIFEST = "experiments/docs/publication_allowlist.json"
 RELEASE_MANIFEST = "experiments/release_manifest.json"
+SNAPSHOT_OBJECTS = {
+    "experiments/provenance/objects/": "experiments/provenance/frozen_manifest.json",
+    "experiments/provenance/corrections_20261024/objects/": "experiments/provenance/corrections_20261024/manifest.json",
+}
 FORBIDDEN_SUFFIXES = {
     ".tex", ".ltx", ".bib", ".bbl", ".bst", ".cls", ".sty", ".clo",
     ".doc", ".docx", ".docm", ".dot", ".dotx", ".dotm", ".odt", ".ott", ".rtf", ".typ", ".qmd", ".rmd",
@@ -22,7 +26,12 @@ FORBIDDEN_SUFFIXES = {
     ".aux", ".toc", ".out", ".synctex", ".spl", ".part", ".dtx", ".ins", ".bbx", ".cbx", ".lbx", ".lco", ".drawio",
 }
 PRIVATE_PARTS = {"article", "manuscript", "manuscripts", "templates", "tables", "figures",
-                 ".git", ".venv", "__pycache__", "local_work", "superseded"}
+                 ".git", ".venv", "__pycache__", "local_work", "superseded", "research"}
+PRIVATE_FILENAMES = {"author_signoff.md", "correction_plan_20261024.md", "research_log.md",
+                     "implementation_plan.md", "scientific_audit.md", "code_review.md", "design.md",
+                     "resources_20261017.json"}
+PRIVATE_PATHS = {f"experiments/results/levers_logs/bench_w{i}.log" for i in range(1, 7)}
+PERSONAL_PATH = re.compile(rb"/(?:Users|home)/[^/\s'\"<>]+/|/private/var/" + b"folders/")
 OPAQUE_ARCHIVE_SUFFIXES = {".gz", ".tgz", ".tar", ".bz2", ".xz", ".7z", ".rar", ".bundle"}
 MAX_ARCHIVE_DEPTH = 5
 MAX_EXPANDED_BYTES = 512 * 1024 * 1024
@@ -55,7 +64,8 @@ def check_policy_path(name, *, allow_pdf=False, package_member=False):
     suffix = path.suffix.lower()
     if allow_pdf and name == "article/main.pdf":
         return path
-    if parts & PRIVATE_PARTS or suffix in FORBIDDEN_SUFFIXES or path.name == ".DS_Store":
+    if (parts & PRIVATE_PARTS or str(path).lower() in PRIVATE_PATHS or path.name.lower() in PRIVATE_FILENAMES or
+            suffix in FORBIDDEN_SUFFIXES or path.name == ".DS_Store"):
         raise PolicyError(f"forbidden private/editorial path: {name}")
     if suffix == ".pdf":
         raise PolicyError(f"PDF requires explicit optional entry and --include-paper-pdf: {name}")
@@ -78,6 +88,8 @@ def local_file(root, name):
 def check_bytes(name, data, *, allow_pdf=False, allow_archive=False,
                 expected_members=None, depth=0, budget=None, package_member=False):
     path = check_policy_path(name, allow_pdf=allow_pdf, package_member=package_member)
+    if PERSONAL_PATH.search(data):
+        raise PolicyError(f"personal filesystem path in public file: {name}")
     if MANUSCRIPT_CONTENT.search(data):
         raise PolicyError(f"editable manuscript content under renamed path: {name}")
     pdf_header = data.lstrip().startswith(b"%PDF-")
@@ -171,18 +183,19 @@ def load_manifest(root, manifest, *, include_paper_pdf=False):
             raise PolicyError(f"data archive needs explicit unique members and a files entry: {name}")
         for member in members:
             check_policy_path(member)
-    sources = None
+    sources_by_manifest = {}
     payloads = {}
     for name in names:
         check_policy_path(name, allow_pdf=include_paper_pdf)
         payload = local_file(root, name).read_bytes()
         check_bytes(name, payload, allow_pdf=include_paper_pdf,
                     allow_archive=name in archives, expected_members=archives.get(name))
-        if name.startswith("experiments/provenance/objects/"):
-            if sources is None:
-                frozen_path = "experiments/provenance/frozen_manifest.json"
+        for prefix, frozen_path in SNAPSHOT_OBJECTS.items():
+            if not name.startswith(prefix):
+                continue
+            if frozen_path not in sources_by_manifest:
                 if frozen_path not in names:
-                    raise PolicyError("snapshot object requires allowlisted frozen_manifest.json")
+                    raise PolicyError("snapshot object requires allowlisted provenance manifest")
                 sources = json.loads(local_file(root, frozen_path).read_text()).get("sources", {})
                 if not isinstance(sources, dict):
                     raise PolicyError("snapshot sources must be a path-to-hash mapping")
@@ -190,7 +203,11 @@ def load_manifest(root, manifest, *, include_paper_pdf=False):
                     _source_identity(original)
                     if not isinstance(digest, str) or not re.fullmatch(r"[0-9a-f]{64}", digest):
                         raise PolicyError(f"invalid source hash: {original}")
+                sources_by_manifest[frozen_path] = sources
+            sources = sources_by_manifest[frozen_path]
             digest = PurePosixPath(name).name
+            if name != prefix + digest or not re.fullmatch(r"[0-9a-f]{64}", digest):
+                raise PolicyError(f"invalid content-addressed object path: {name}")
             if digest not in sources.values():
                 raise PolicyError(f"unmapped content-addressed object: {name}")
             if hashlib.sha256(payload).hexdigest() != digest:
@@ -232,7 +249,7 @@ def check_git_history(root, *, include_paper_pdf=False, details=None):
             if record:
                 metadata, raw_name = record.split(b"\t", 1)
                 objects[raw_name.decode("utf-8", errors="strict")] = metadata.decode().split()[2]
-        snapshot_sources = None
+        snapshot_sources = {}
         for record in records:
             if not record:
                 continue
@@ -245,16 +262,25 @@ def check_git_history(root, *, include_paper_pdf=False, details=None):
                 raise PolicyError(f"Git symlink is forbidden at {commit}:{name}")
             if kind != "blob":
                 raise PolicyError(f"uninspectable Git object/submodule: {commit}:{name}")
-            if name.startswith("experiments/provenance/objects/"):
-                if snapshot_sources is None:
-                    frozen = objects.get("experiments/provenance/frozen_manifest.json")
+            for prefix, manifest in SNAPSHOT_OBJECTS.items():
+                if not name.startswith(prefix):
+                    continue
+                if manifest not in snapshot_sources:
+                    frozen = objects.get(manifest)
                     if not frozen:
                         raise PolicyError(f"unmapped Git snapshot object: {commit}:{name}")
-                    snapshot_sources = json.loads(git("cat-file", "blob", frozen)).get("sources", {})
-                    for original in snapshot_sources:
+                    sources = json.loads(git("cat-file", "blob", frozen)).get("sources", {})
+                    if not isinstance(sources, dict):
+                        raise PolicyError("snapshot sources must be a path-to-hash mapping")
+                    for original, digest in sources.items():
                         _source_identity(original)
+                        if not isinstance(digest, str) or not re.fullmatch(r"[0-9a-f]{64}", digest):
+                            raise PolicyError(f"invalid source hash: {original}")
+                    snapshot_sources[manifest] = sources
                 digest = PurePosixPath(name).name
-                if digest not in snapshot_sources.values():
+                if name != prefix + digest or not re.fullmatch(r"[0-9a-f]{64}", digest):
+                    raise PolicyError(f"invalid Git content-addressed object path: {commit}:{name}")
+                if digest not in snapshot_sources[manifest].values():
                     raise PolicyError(f"unmapped Git snapshot object: {commit}:{name}")
                 if hashlib.sha256(git("cat-file", "blob", object_id)).hexdigest() != digest:
                     raise PolicyError(f"Git snapshot object hash mismatch: {commit}:{name}")

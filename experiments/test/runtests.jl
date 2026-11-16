@@ -64,6 +64,13 @@ end
     @test r["scenario"]==2
     @test r["objective"]≈1. atol=1e-6
 end
+@testset "Capacity menu reports iteration limits faithfully" begin
+    d=Instance("menu-limit",:retail,ones(1,2),fill(2.,2),fill(3.,1,2),zeros(1,2),ones(1,2),1.,zeros(1))
+    foil=Foil([(1,2,1)])
+    r=explain_menu(d,foil,[[0.,0.]];options=Options(max_iterations=0,time_limit=120.))
+    @test r["scenarios"][1]["result"]["status"] == "ITERATION_LIMIT"
+    @test r["status"] == "ITERATION_LIMIT"
+end
 @testset "Conjunction foil, complement and additive cuts" begin
     d=make_instance("conjunction",:retail,[1.0 0.7 1.2;0.8 1.1 0.6];seed=81)
     foil=Foil([(1,2,1),(2,3,1)])

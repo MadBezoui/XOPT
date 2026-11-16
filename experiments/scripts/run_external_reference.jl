@@ -46,10 +46,10 @@ mkpath(outputdir)
 using JSON3,SHA,Dates,Random,JuMP
 include(joinpath(@__DIR__,"..","src","XOPT.jl"));using .XOPT
 include(joinpath(@__DIR__,"..","src","literature_cg.jl"))
-hashes=Dict(name=>bytes2hex(sha256(read(joinpath(root,"experiments/src",name)))) for name in ["XOPT.jl","literature_cg.jl"])
+hashes=Dict(name=>bytes2hex(sha256(read(joinpath(root,name)))) for name in ["experiments/src/XOPT.jl","experiments/src/literature_cg.jl","experiments/scripts/run_external_reference.jl"])
 jobs=Any[]
-for profile in ["main","multifoil"],line in eachline(joinpath(root,"experiments/results/"*profile*".jsonl"))
-    a=JSON3.read(line);a.job.method=="ccg" && push!(jobs,(profile,a))
+for profile in ["main","multifoil"],line in eachline(joinpath(outputdir,profile*".jsonl"))
+    a=JSON3.read(line);a.job.method=="ccg" && push!(jobs,(profile,a,bytes2hex(sha256(line))))
 end
 shuffle!(MersenneTwister(20261017),jobs)
 d=make_instance("warmup",:retail,ones(1,3));f=Foil([(1,2,1)])
@@ -57,7 +57,7 @@ for mode in [:weak,:strong],method in [:xopt,:literature]
     (method==:xopt ? explain : literature_cg)(d,f;options=Options(mode=mode))
 end
 open(out,"w") do io
- for (j,(profile,a)) in enumerate(jobs)
+ for (j,(profile,a,input_record_sha256)) in enumerate(jobs)
     m=a.instance;I=Int(m.I);T=Int(m.T);mat(v)=reshape(Float64.(v),I,T)
     d=Instance(String(m.id),Symbol(m.family),mat(m.demand),Float64.(m.capacity),mat(m.fixed),mat(m.unit),mat(m.holding),Float64(m.retention),Float64.(m.initial))
     foil=Foil([Tuple(Int.(x)) for x in a.foil]);job=a.job
@@ -68,7 +68,9 @@ open(out,"w") do io
         audit=r.status=="SOLVER_VALIDATED" ? verify(d,foil,r;options=opts) : nothing
         rec=Dict("profile"=>profile,"key"=>a.key,"family"=>m.family,"mode"=>job.mode,
             "method"=>string(method),"result"=>resultdict(r),"verification"=>audit,
-            "source_sha256"=>hashes,"recorded_utc"=>string(now(UTC)),"reference"=>"arXiv:2510.17624v2 Algorithm 1 / Eq. (14), independent reimplementation")
+            "source_sha256"=>hashes,"recorded_utc"=>string(now(UTC)),"reference"=>"arXiv:2510.17624v2 Algorithm 1 / Eq. (14), independent reimplementation",
+            "input_origin"=>(outputdir==history ? "historical" : "new_campaign"),
+            "input_file_sha256"=>bytes2hex(sha256(read(joinpath(outputdir,profile*".jsonl")))),"input_record_sha256"=>input_record_sha256)
         JSON3.write(io,rec);write(io,'\n');flush(io)
         isnothing(audit)||audit["valid"]||error("Reference benchmark failed validation")
     end

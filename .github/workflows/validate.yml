@@ -12,7 +12,6 @@ jobs:
     steps:
       - uses: actions/checkout@v7
         with:
-          fetch-depth: 0
           persist-credentials: false
       - uses: actions/setup-python@v7
         with:
@@ -24,9 +23,9 @@ jobs:
         run: python -m pip install -r experiments/requirements.txt
       - name: Replay evidence and validate with current code
         run: bash experiments/scripts/reproduce.sh --no-pdf
-      - name: Check every reachable Git reference and build a private candidate
+      - name: Check the tree under test and build the archive
         run: >-
           python experiments/scripts/build_release.py
           --root .
-          --output "$RUNNER_TEMP/xopt-computational-candidate.zip"
+          --output "$RUNNER_TEMP/xopt-computational-artifact.zip"
           --report "$RUNNER_TEMP/xopt-publication-check.json"

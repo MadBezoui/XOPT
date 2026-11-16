@@ -4,24 +4,18 @@ include(joinpath(@__DIR__, "..", "src", "uc.jl")); using .UCX
 include(joinpath(@__DIR__, "..", "src", "robustness.jl"))
 
 const ROOT = normpath(joinpath(@__DIR__, "..", ".."))
-const OUT = joinpath(ROOT, "experiments/results/corrections_20261024")
+const OUT = joinpath(ROOT, "experiments/results/corrections_20261028")
 const CASE = "tiny_2020-07-06_s1_h15|[(3, 2, 1)]|strong|M"
 digest(p) = bytes2hex(sha256(read(p)))
 const SOURCE_PATHS = ["experiments/src/XOPT.jl", "experiments/src/uc.jl", "experiments/src/robustness.jl",
     "experiments/scripts/run_corrections.jl", "experiments/scripts/run_robustness.jl",
     "experiments/docs/correction_protocol_20261024.md"]
 hashes() = Dict(p => digest(joinpath(ROOT,p)) for p in SOURCE_PATHS)
-function preserve_previous(path)
-    if isfile(path)
-        archive = joinpath(OUT,"superseded",Dates.format(now(UTC),"yyyymmddTHHMMSS")*"_"*basename(path))
-        mkpath(dirname(archive));cp(path,archive;force=false)
-    end
-end
 function writejson(path, value)
-    preserve_previous(path)
+    ispath(path) && error("Refusing to overwrite existing correction evidence: $path")
     temp=path*".part"
     open(temp,"w") do io; JSON3.write(io,value);write(io,'\n');end
-    mv(temp,path;force=true)
+    mv(temp,path;force=false)
 end
 function uc_correction()
     path=joinpath(OUT,"uc_correction.json");old=nothing;original_file="";original_line=""
@@ -39,6 +33,7 @@ function uc_correction()
             println("Reusing explicitly bound UC correction");return
         end
     end
+    ispath(path) && error("Existing UC correction does not match current sources; preserve it and use a new correction campaign")
     d=uc_restore(old.instance);foil=Foil([Tuple(Int.(x)) for x in old.foil])
     opt=Options(mode=Symbol(old.mode),margin=Float64(old.margin),time_limit=120.)
     lev=UCLevers(noload=false,marginal=true)
@@ -63,7 +58,8 @@ function radius_corrections()
             println("Reusing 50 fully bound current radius records");return
         end
     end
-    preserve_previous(path);temp=path*".part";n=0
+    ispath(path) && error("Existing radius records do not match current sources; preserve them and use a new correction campaign")
+    temp=path*".part";n=0
     open(temp,"w") do io
         for line in eachline(input)
             a=JSON3.read(line)
@@ -81,7 +77,7 @@ function radius_corrections()
         end
     end
     n==50||error("Expected 50 radius records, found $n")
-    mv(temp,path;force=true)
+    mv(temp,path;force=false)
 end
 mkpath(OUT)
 mode=isempty(ARGS) ? "all" : first(ARGS)

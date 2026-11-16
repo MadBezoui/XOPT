@@ -279,7 +279,7 @@ function explain_menu(d,foil,increments;options=Options(),method=:ccg)
     for inc in increments
         isnothing(array_validation(inc,size(d.capacity))) && all(d.capacity.+inc.>=0) || throw(ArgumentError("capacity increment"))
     end
-    t0=time(); records=Any[];best=Inf;winner=0;bestresult=nothing;allresolved=true
+    t0=time(); records=Any[];best=Inf;winner=0;bestresult=nothing;unresolved=Set{String}()
     order=sortperm([sum(abs.(inc)./d.capacity) for inc in increments])
     for idx in order
         inc=increments[idx];capcost=sum(abs.(inc)./d.capacity);active=sum(abs.(inc).>options.tolerance)
@@ -288,7 +288,7 @@ function explain_menu(d,foil,increments;options=Options(),method=:ccg)
             push!(records,Dict("scenario"=>idx,"status"=>"PRUNED","lower_bound"=>bound));continue
         end
         remain=options.time_limit-(time()-t0)
-        remain<=0 && (allresolved=false;break)
+        remain<=0 && (push!(unresolved,"TIME_LIMIT");break)
         vals=(; (k=>getfield(options,k) for k in fieldnames(Options) if k!=:time_limit)...)
         opt=Options(;vals...,time_limit=remain)
         r=explain(d,foil;options=opt,method=method,capacity=d.capacity.+inc,capcost=capcost)
@@ -296,9 +296,11 @@ function explain_menu(d,foil,increments;options=Options(),method=:ccg)
         if r.status=="SOLVER_VALIDATED" && r.objective<best
             best=r.objective;winner=idx;bestresult=resultdict(r)
         end
-        if !(r.status in ["SOLVER_VALIDATED","SOLVER_INFEASIBLE"]);allresolved=false;end
+        if !(r.status in ["SOLVER_VALIDATED","SOLVER_INFEASIBLE"]);push!(unresolved,r.status);end
     end
-    Dict("status"=>allresolved ? (isfinite(best) ? "SOLVER_VALIDATED" : "SOLVER_INFEASIBLE") : "TIME_LIMIT",
+    status=isempty(unresolved) ? (isfinite(best) ? "SOLVER_VALIDATED" : "SOLVER_INFEASIBLE") :
+        length(unresolved)==1 ? only(unresolved) : "UNRESOLVED"
+    Dict("status"=>status,"unresolved_statuses"=>sort!(collect(unresolved)),
       "objective"=>isfinite(best) ? best : nothing,"scenario"=>winner,"result"=>bestresult,"seconds"=>time()-t0,"scenarios"=>records)
 end
 end

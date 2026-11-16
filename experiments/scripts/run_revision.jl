@@ -5,6 +5,8 @@ const ROOT=normpath(joinpath(@__DIR__,"..",".."))
 profile=isempty(ARGS) ? "extended" : ARGS[1]
 smoke=length(ARGS)>1 && ARGS[2]=="smoke"
 outputdir=get(ENV,"XOPT_RESULTS_DIR",joinpath(ROOT,"experiments/results"));mkpath(outputdir)
+inputdir=get(ENV,"XOPT_RESULTS_DIR",joinpath(ROOT,"experiments/results"))
+input_hashes=Dict{String,String}()
 file=smoke ? joinpath(ROOT,"experiments/release/revision_smoke_$(profile).jsonl") : joinpath(outputdir,"revision_$(profile).jsonl")
 hashes=Dict(p=>bytes2hex(sha256(read(joinpath(ROOT,p)))) for p in ["experiments/src/XOPT.jl","experiments/src/anytime.jl","experiments/scripts/run_revision.jl","experiments/docs/revision_protocol_20261017.md"])
 seen=Set{String}()
@@ -16,6 +18,7 @@ if isfile(file)
 end
 function write_record(key,a)
  a["key"]=key;a["profile"]=profile;a["source_sha256"]=hashes;a["recorded_utc"]=string(now(UTC));a["julia"]=string(VERSION)
+ a["input_file_sha256"]=copy(input_hashes);a["input_origin"]=haskey(ENV,"XOPT_RESULTS_DIR") ? "new_campaign" : "historical"
  open(file,"a") do io;JSON3.write(io,a);write(io,'\n');flush(io);end
  push!(seen,key);println(key," => ",get(a,"status",get(get(a,"output",Dict()),"status","recorded")));flush(stdout)
 end
@@ -29,7 +32,10 @@ function meta(d,m)
  "demand"=>d.demand,"capacity"=>d.capacity,"fixed"=>d.fixed,"unit"=>d.unit,"holding"=>d.holding,"retention"=>d.retention,"initial"=>d.initial,
  "series"=>m.series,"first_period"=>m.first_period,"scales"=>m.scales)
 end
-records(p)=[JSON3.read(l) for l in eachline(joinpath(ROOT,"experiments/results/$p.jsonl"))]
+function records(p)
+ path=joinpath(inputdir,"$p.jsonl");input_hashes[p*".jsonl"]=bytes2hex(sha256(read(path)))
+ [JSON3.read(l) for l in eachline(path)]
+end
 # Compilation warmup includes cold, initialized, baseline and menu in both regimes.
 w=Instance("warmup",:retail,ones(1,2),fill(2.,2),fill(3.,1,2),zeros(1,2),ones(1,2),1.,zeros(1));wf=Foil([(1,2,1)])
 for mode in [:weak,:strong]

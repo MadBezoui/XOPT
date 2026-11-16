@@ -9,6 +9,8 @@ import json
 import math
 from pathlib import Path
 from provenance import checked_path, sha256, verify_snapshot, verify_source, verify_sources
+from correction_history import verify_correction_history
+from validate_single_lever_revalidation import validate as validate_reconstructed_baselines
 from record_io import CORRECTIONS, apply_uc_correction, current_radii, read_records
 
 PRIMARY = {"correctness": 40, "main": 120, "sensitivity": 72, "scale": 36,
@@ -161,6 +163,7 @@ def validate_current_report(root, files):
 
 def validate(root):
     root = Path(root).resolve()
+    correction_history = verify_correction_history(root)
     names = {p.name for p in root.iterdir() if not p.name.startswith('.')}
     require({"data", "experiments"} <= names <= {"article", "data", "experiments", "README.md", "README.en.md", "CITATION.cff"},
             f"Unexpected root content: {sorted(names)}")
@@ -233,13 +236,16 @@ def validate(root):
         if row["status"] == "RESTRICTED_SOLVER_OPTIMAL":
             require(row.get("verification", {}).get("valid") is True, "Invalid coordinate baseline")
     fresh = validate_current_report(root, files)
+    reconstructed_baselines = validate_reconstructed_baselines(root)
     return {"passed":True,"historical_records":sum(len(v) for v in files.values()),
+            "correction_history": correction_history,
             "primary_runs":320,"external_comparison_runs":168,"supplementary_retained_attempts":256,
             "study2_records":1216,"study3_records":250,"study4_records":300,
             "raw_files_verified":len(downloads),"pglib_files_verified":4,
             "levers_enumeration":enum_levers,"uc_enumeration":enum_uc,
             "historical_uc_disagreements_preserved":historical_disagreements,"uc_corrections":1,
             "radius_audits":len(radii),"fresh_current_validation":fresh,
+            "reconstructed_baseline_validation":reconstructed_baselines,
             "source_policy":"Historical hashes verified against preserved original code; current numerical checks bound separately",
             "arithmetic":"Float64/tolerance-based checks with the same solver; no rational proof certificates",
             "campaigns_recomputed":False}
